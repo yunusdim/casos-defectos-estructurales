@@ -12,7 +12,5 @@ ID+paquete+versión+ruta), de modo que un swap del mismo tamaño (arreglo real
 Cada caso documenta: repro (en vivo o solo por código, declarado
 explícitamente), el issue filed en el upstream correspondiente, y el link.
 
-Metodología de reporte: ver `prompt-registro-sala.md`.
-
 Trabajo relacionado: [Closure Trivialization](https://doi.org/10.5281/zenodo.21908527)
 (Diego Gabriel Impieri).
