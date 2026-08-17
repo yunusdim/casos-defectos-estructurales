@@ -1,6 +1,6 @@
 # Casos — defectos estructurales reportados
 
-Corte: 2026-08-17 (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión.
+Corte: 2026-08-17, segunda actualización del día (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión.
 
 Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso). 7 cerrados: 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). 7 con intercambio real con mantenedor o colaborador — el más fuerte, SwiftLint #6871, ya tiene PR de fix abierta por un tercero; jscpd #938 tiene un diseño completo de baseline aceptado por el mantenedor (kucherenko); eslint #21223 tiene una pregunta de clarificación del mantenedor (mdjermanovic) ya respondida. MSRC: caso abierto, bajo reserva por pedido de MSRC. El resto, sin respuesta todavía.
 
@@ -45,7 +45,9 @@ Qué pasó — verificado en vivo el 17-ago-2026:
 
 — Adelantó que la UI interactiva futura sería el lugar para el detalle de qué imports matchean cada ignore.
 
-— Pendiente: decidir si mando la PR de (b).
+— Respondí el 17-ago-2026: concedí el punto del wildcard, acepté el descarte de (a) por el argumento del linter stateless, y **tomé la PR de (b)**. Adopté el formato que él mismo propuso, respondí su reserva de que el conteo por sí solo no deja ver los aumentos (correcto dentro de una corrida, pero el número queda en el log del build y el aumento aparece en un diff de CI entre corridas), y dejé tres definiciones a cerrar antes de escribir la PR: nombre y default del flag (`--show-ignored-counts`, off por default), caso cero (omitir el paréntesis o imprimir `(0 ignored imports)`), y semántica del conteo (aristas del grafo ignoradas vs entradas de `ignore_imports` que matchearon — para un wildcard que cubre 12 aristas dan 12 y 1; propuse aristas).
+
+— Pendiente: respuesta de seddonym a esas tres definiciones. Sin eso no se puede escribir la PR.
 
 ---
 
@@ -79,7 +81,7 @@ Qué pasó — con historia real:
 ## 6 · github/spec-kit #4106 — el caso con más interacción
 
 **Link**: https://github.com/github/spec-kit/issues/4106
-**Estado**: Open. Colaboración activa, en curso. Hay además una PR de un tercero sobre este issue, con cambios pedidos por el mantenedor.
+**Estado**: Open. Colaboración activa. Preset publicado y submiteado al catálogo. Hay además una PR de un tercero sobre este issue, con cambios pedidos por el mantenedor.
 
 Qué planteé: `/speckit.analyze` no detecta cuando un vocabulario cerrado (un set de valores admisibles) se enumera distinto en distintas partes de una spec — ni la verificación estructural ni el oráculo de trayectorias lo cubren. Con un caso medido propio: un sistema de 40 módulos generado por contrato, 4 defectos sobrevivieron verificación completa, los 4 eran la misma clase de error (transcripción de una definición), uno de ellos exactamente este.
 
@@ -104,9 +106,13 @@ Qué pasó — historia sustancial:
 
 — **Estado de esa PR: mnriem pidió cambios** ("Please address Copilot feedback"). El review automático marcó, entre otras cosas, dos puntos que tocan directamente lo que planteé: (1) que meter el pass en el core saltea el rollout acordado en este issue, que era preset primero y después catálogo; y (2) que reportar solo el mismatch count sin cobertura de reconocimiento deja un cero indistinguible de un pass que no reconoció nada — el mismo argumento de count-sin-identidad del issue origen, encontrado de forma independiente.
 
-— Estado real de mi preset al 17-ago: construido y funcionando con `specify preset add --dev`, versión 1.0.0, composición verificada sobre proyecto limpio (383 líneas materializadas, core intacto en la línea 161, pass agregado en la 269), y corrida end-to-end hecha contra las tres fixtures con un modelo leyendo la prosa compuesta — los tres resultados coinciden con la corrida mecánica. **No está listo para el catálogo**: faltan repo público, LICENSE y README con comando de instalación, más dos correcciones que la propia corrida end-to-end sacó a la luz (la unidad de `declarations inspected` no está definida, y un nombre ambiguo en la fixture 003 que no altera el resultado pero conviene declarar).
+— Respondí el 17-ago-2026 abriendo con "Not yet", con la evidencia de composición (383 líneas materializadas, core intacto en la línea 161, pass agregado en la 269), la corrida end-to-end contra las tres fixtures con un modelo leyendo la prosa compuesta —los tres resultados coinciden con la corrida mecánica—, los tres archivos que faltaban, y el plan de submission. Declaré también que #4160 no es mía y que no estuve involucrado, y aporté dos hallazgos que le pegan: el punto de cobertura es el mismo que el review automático ya había levantado, y el problema de unidad de `declarations inspected` aplica a cualquier implementación en prosa de este pass, incluida esa.
 
-— Issue sigue abierto. **Pendiente y sin responder: la pregunta de mnriem del 17-ago.**
+— **Preset publicado el 17-ago-2026**: `github.com/yunusdim/spec-kit-preset-closed-vocabulary`, MIT, 14 archivos, tag `v1.0.0`. Las dos correcciones que había comprometido quedaron aplicadas antes de tagear: la unidad de `declarations inspected` fijada en líneas no vacías, y la regla de relación declarada explicitada como evaluada antes de agrupar, con el caso `shipment status` / `order status` como ejemplo de que la estabilidad es por regla y no por suerte.
+
+— **Entrada submiteada al catálogo**: PR `github/spec-kit#4179`, desde `yunusdim:patch-1`, con la entrada ordenada alfabéticamente entre `claude-ask-questions` y `command-density`. `download_url` coincide carácter por carácter con el comando de instalación del README. No pedí el label `preset-submission` — lo aplica un mantenedor en triage.
+
+— Issue sigue abierto. Pendiente: respuesta de mnriem.
 
 ---
 
@@ -181,7 +187,9 @@ Qué pasó — historia real, la más fuerte de los casos:
 
 — Abrió **PR #6872** ("Fix baseline duplicate replacements") con el fix, y está pidiendo confirmación de un mantenedor sobre la precedencia correcta antes de avanzar con la implementación.
 
-— Pendiente: que un mantenedor de SwiftLint responda y la PR se mergee.
+— Le respondí en la PR el 17-ago-2026: validé el mecanismo de ancla —una violación duplicada sin cambios es la evidencia de que el grupo no se desplazó, que es justo la distinción que el fallback viejo no podía hacer— y declaré el residuo real: si todas las duplicadas de un grupo se reemplazan en la misma corrida, no sobrevive ancla, el grupo cae al camino tolerante al desplazamiento y el swap sigue invisible. Es más angosto que lo reportado en el issue y está acotado por lo genérico que sean reason y texto de línea.
+
+— Pendiente: que un mantenedor apruebe los workflows pendientes y decida sobre la precedencia.
 
 ---
 
@@ -375,7 +383,11 @@ Qué pasó — con historia real:
 
 Qué planteé: `ThresholdReporter` solo mira % agregado.
 
-Qué pasó: **kucherenko** (mantenedor) aceptó el planteo — publicó un diseño completo de modo baseline opt-in (`.jscpd-baseline.json`, fingerprint por contenido + ruta, no por línea), a implementar en el motor Rust v5. Pendiente: implementación.
+Qué pasó: **kucherenko** (mantenedor) aceptó el planteo — publicó un diseño completo de modo baseline opt-in (`.jscpd-baseline.json`, fingerprint por hash de contenido del fragmento duplicado más rutas, no por número de línea; los clones ausentes del baseline hacen fallar la corrida aunque el total quede bajo `--threshold`; los removidos no molestan; y un flag regenera el baseline). A implementar en el motor Rust v5.
+
+Le respondí el 17-ago-2026 confirmando que las dos decisiones que importan son correctas, y levanté dos puntos. **Multiplicidad del fingerprint**: dos instancias distintas del mismo par de archivos con contenido duplicado idéntico producen el mismo fingerprint, así que quitar una e introducir otra igual en el mismo par deja el conjunto sin cambios — el mismo defecto de este issue un nivel más abajo, un conjunto que registra presencia pero no multiplicidad; se cierra con un count por fingerprint o un índice de ocurrencia. **Regeneración no silenciosa**: el flag de regeneración es el mecanismo de absorción, y es ahí donde este tipo de gate degrada; imprimir qué se agregó y qué se quitó, con números, hace visible el crecimiento sin que la herramienta tenga que recordar nada entre corridas.
+
+Pendiente: respuesta del owner a esos dos puntos, e implementación.
 
 ---
 
@@ -463,13 +475,13 @@ Caso 1 — ArchUnit #1700 — Open — sin historia
 
 Caso 2 — dependency-cruiser #1078 — Open — sin historia
 
-Caso 3 — import-linter #375 — Open — **owner descartó (a), aceptó (b) y ofreció PR**
+Caso 3 — import-linter #375 — Open — **owner aceptó (b) y ofreció PR; la tomé, esperando sus tres definiciones**
 
 Caso 4 — openrewrite/rewrite #8498 — Open — sin historia
 
 Caso 5 — Hypothesis #4854 — **Closed** — cerrado por política AI, respondí, sin reapertura
 
-Caso 6 — spec-kit #4106 — Open — **colaboración activa; mnriem pidió el preset para el catálogo, sin responder; PR de un tercero (#4160) con cambios pedidos**
+Caso 6 — spec-kit #4106 — Open — **respondido; preset publicado con tag v1.0.0 y submiteado al catálogo (PR #4179); PR de un tercero (#4160) con cambios pedidos**
 
 Caso 7 — eslint #21223 — Open — mantenedor pidió clarificación, respondí, a la espera
 
@@ -479,7 +491,7 @@ Caso 9 — rubocop #15570 — Open — sin historia
 
 Caso 10 — eslint #21226 — Open — sin historia (es el issue-origen citado por los demás)
 
-Caso 11 — SwiftLint #6871 — Open — **confirmado + PR de fix (#6872) por un colaborador**
+Caso 11 — SwiftLint #6871 — Open — **confirmado + PR de fix (#6872) por un colaborador; le respondí en la PR con el residuo del grupo completo**
 
 Caso 12 — golangci-lint #6714 — **Closed (declined)** — declined, respondí, sin reapertura
 
@@ -513,7 +525,7 @@ Caso 25 — knip #1949 — Open — sin historia
 
 Caso 26 — deptry #1654 — **Closed (not planned)** — "AI slop", respondí con tono neutro, sin reapertura
 
-Caso 27 — jscpd #938 — Open — **mantenedor aceptó el planteo, diseño de baseline publicado**
+Caso 27 — jscpd #938 — Open — **mantenedor aceptó el planteo y publicó el diseño; le respondí con multiplicidad de fingerprint y regeneración no silenciosa**
 
 Caso 28 — simian #23 — Open — sin historia
 
