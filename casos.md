@@ -31,11 +31,21 @@ Qué pasó: nada aún.
 ## 3 · seddonym/import-linter #375
 
 **Link**: https://github.com/seddonym/import-linter/issues/375
-**Estado**: Open. Sin historia — 0 comentarios.
+**Estado**: Open. **Respuesta sustantiva del owner: descarta (a), acepta (b) y ofrece PR.**
 
-Qué planteé: `ignore_imports` con entradas literales está bien (absorción por instancia) y `unmatched_ignore_imports_alerting` (default error) fuerza a limpiar excepciones muertas — ambos correctos. El gap: los wildcards (`**`) rompen ambas garantías a la vez, permiten una clase entera y quedan "matched" mientras el conjunto que cubren crece de 1 a 40 sin que nada alerte. Pedí trackear match count por expresión wildcard y alertar cuando crece.
+Qué planteé: `ignore_imports` con entradas literales está bien (absorción por instancia) y `unmatched_ignore_imports_alerting` (default error) fuerza a limpiar excepciones muertas — ambos correctos. El gap: los wildcards (`**`) rompen ambas garantías a la vez, permiten una clase entera y quedan "matched" mientras el conjunto que cubren crece de 1 a 40 sin que nada alerte. Pedí (a) trackear match count por expresión wildcard y alertar cuando crece, y (b) reportar el total de imports ignorados en un contrato KEPT.
 
-Qué pasó: nada aún.
+Qué pasó — verificado en vivo el 17-ago-2026:
+
+— **seddonym** (owner) respondió reformulando el planteo en sus términos: *"the use of wildcards in ignore_imports can mask new violations being added"*, y lo defendió como comportamiento intencional: *"Arguably, that's the point of expressions with wildcards in them... If you want the contract to fail if a new violation is added, just don't use wildcards - list each import individually."*
+
+— Descartó **(a)** con una razón técnica concreta: *"I think I'm going to rule this one out for the moment. At the moment the linter is stateless, that would be a big change."*
+
+— Aceptó **(b)**: *"I'm certainly open to this."* Propuso formato concreto (`Territory layers KEPT (3 ignored imports)`) tras un flag de CLI, con la reserva de que por sí solo quizás no alcance para detectar aumentos, y cerró con *"Happy to consider a PR for it."*
+
+— Adelantó que la UI interactiva futura sería el lugar para el detalle de qué imports matchean cada ignore.
+
+— Pendiente: decidir si mando la PR de (b).
 
 ---
 
@@ -88,7 +98,9 @@ Qué pasó — historia sustancial:
 
 — Reporté medición de campo sobre 11 contratos reales propios: 5 no aplican, 6 con 303 declaraciones inspeccionadas, 44 reconocidas (15%), 0 divergencias — con la limitación declarada de que sé que hay una divergencia real en ese corpus que el check no puede alcanzar (es contra la fuente, no entre declaraciones).
 
-— Issue sigue abierto. Pendiente: correr `/speckit-analyze` end-to-end con un agente real (declarado explícitamente como no hecho todavía).
+— **mnriem**, 17-ago-2026: *"Looks like solid progress. Have you rolled it into a preset we can include in the community catalog? Did I miss that?"* — pide el preset explícitamente y menciona inclusión en el community catalog. El issue tiene rama vinculada `feat(analyze): detect closed vocabulary drift`.
+
+— Issue sigue abierto. **Pendiente y sin responder: la pregunta de mnriem del 17-ago.** Antes hay que establecer el estado real del preset (construido / probado end-to-end / listo para catálogo).
 
 ---
 
@@ -397,7 +409,7 @@ Qué pasó: cerrado por **William Woodruff** sin ningún comentario. Sin reapert
 ## 31 · pyupio/safety #907
 
 **Link**: https://github.com/pyupio/safety/issues/907
-**Estado**: Open. Recién posteado, sin respuesta todavía.
+**Estado**: Open. Sin respuesta humana — 1 comentario, bot de bienvenida de github-actions (15-ago-2026).
 
 Qué planteé: `ignore-vulnerabilities` por ID puro, sin binding a paquete/versión, sin expiry por default.
 
@@ -445,13 +457,13 @@ Caso 1 — ArchUnit #1700 — Open — sin historia
 
 Caso 2 — dependency-cruiser #1078 — Open — sin historia
 
-Caso 3 — import-linter #375 — Open — sin historia
+Caso 3 — import-linter #375 — Open — **owner descartó (a), aceptó (b) y ofreció PR**
 
 Caso 4 — openrewrite/rewrite #8498 — Open — sin historia
 
 Caso 5 — Hypothesis #4854 — **Closed** — cerrado por política AI, respondí, sin reapertura
 
-Caso 6 — spec-kit #4106 — Open — **colaboración activa, feedback positivo**
+Caso 6 — spec-kit #4106 — Open — **colaboración activa; mnriem pidió el preset para el catálogo, sin responder**
 
 Caso 7 — eslint #21223 — Open — mantenedor pidió clarificación, respondí, a la espera
 
@@ -503,7 +515,7 @@ Caso 29 — audit-ci #356 — Open — sin historia
 
 Caso 30 — pip-audit #1113 — **Closed (not planned)** — cerrado sin comentario
 
-Caso 31 — safety #907 — Open — sin historia
+Caso 31 — safety #907 — Open — sin historia (1 comentario, solo bot de bienvenida)
 
 Caso 32 — maven-pmd-plugin #724 — Open — sin historia (code-only)
 
