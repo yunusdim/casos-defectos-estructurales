@@ -2,7 +2,7 @@
 
 Corte: 2026-08-16 (actualizado tras movimiento en 6 casos: 4 cierres nuevos y 2 respuestas sustantivas de mantenedor). Ledger de todos los casos donde participamos: qué se planteó, qué aportamos, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión.
 
-Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso). 7 cerrados: 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). 7 con intercambio real con mantenedor o colaborador — el más fuerte, SwiftLint #6871, ya tiene PR de fix abierta por un tercero; jscpd #938 tiene un diseño completo de baseline aceptado por el mantenedor (kucherenko); eslint #21223 tiene una pregunta de clarificación del mantenedor (mdjermanovic) ya respondida. MSRC en Review/Repro (cola activa, sin mensaje humano aún). El resto, sin respuesta todavía.
+Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso). 7 cerrados: 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). 7 con intercambio real con mantenedor o colaborador — el más fuerte, SwiftLint #6871, ya tiene PR de fix abierta por un tercero; jscpd #938 tiene un diseño completo de baseline aceptado por el mantenedor (kucherenko); eslint #21223 tiene una pregunta de clarificación del mantenedor (mdjermanovic) ya respondida. MSRC: caso abierto, bajo reserva por pedido de MSRC. El resto, sin respuesta todavía.
 
 ## Casos 23-31 · segundo rastrillaje (6 categorías nuevas: secret scanning, type-checker baselines, dead-code baselines, duplicate-code detectors, dependency-vuln suppression, quality gates de código nuevo)
 
@@ -224,18 +224,11 @@ Qué pasó: sin respuesta de los mantenedores de oxc todavía. Es distinto de lo
 
 ---
 
-## 15 · microsoft/agent-governance-toolkit — MSRC (no es GitHub issue, vulnerabilidad viva)
+## 15 · Reporte de seguridad — MSRC (caso abierto, bajo reserva)
 
-**Estado**: **VULN-211868**, Case number **136137**, status **Review / Repro** ("We're reproducing and evaluating the issue"). Pasó de Submitted a Review/Repro — entró a la cola de evaluación activa, pero sin mensaje humano todavía, solo el cambio de estado automático.
+**Estado**: Caso abierto, en revisión activa con el Microsoft Security Response Center (MSRC).
 
-Qué planteamos — el hallazgo más serio de todos, por tratarse de una vulnerabilidad de seguridad viva, no de un gap de diseño: en `agentmesh.governance.policy` (`agent-governance-python/agent-mesh/src/agentmesh/governance/policy.py`), `PolicyRule._eval_expression()` es un mini-parser por regex que solo soporta 6 formas de expresión. Cualquier condición fuera de esa gramática devuelve `False` **silenciosamente** (no excepción). El fail-closed del motor (comentario "V27" en el código) solo dispara ante excepción real, no ante sintaxis no reconocida — así que una regla `deny` con una condición fuera de la gramática soportada nunca dispara, y el motor cae al `default_action` de la policy (`"allow"` en el propio ejemplo del README). Contradice directamente ADR-0013, que declara el motor fail-closed sin flags para fail-open. Reproducido dos veces: standalone y end-to-end (`PolicyEngine.evaluate()` con `decision.allowed == True` sobre una regla deny).
-
-Qué pasó — camino de disclosure, no de issue tracker:
-- Se descartó GitHub issue público desde el principio — `SECURITY.md` del repo pide explícitamente no reportar así.
-- Intento por email a `secure@microsoft.com` — **rebotó**, MSRC ya no acepta submissions nuevas por email plano.
-- Se completó el formulario del MSRC Researcher Portal, incluyendo un párrafo de reclamo explícito sobre la fricción del proceso (el bounce de email) y pedido de un canal de contacto directo para próximas veces, tal como se pidió.
-- **Enviado.** Status: Submitted. Security Impact: Security Feature Bypass. Producto: Copilot, AI + ML, and LLMs. Commit de referencia: `7d0cef5d9820a865c3c19b07bd39ecf7053b58a1`.
-- Pendiente: respuesta de MSRC Case Management, que según el propio portal llega vía la pestaña Activity del reporte, no por email.
+Qué pasó: reporté una vulnerabilidad de seguridad de un proyecto de terceros a través del MSRC Researcher Portal, no por issue público de GitHub, siguiendo la política de seguridad del propio proyecto. El caso quedó abierto y en cola de evaluación. Por pedido explícito de MSRC, los detalles del hallazgo quedan reservados mientras dure la investigación y el período de disclosure coordinado. Pendiente: que MSRC concluya la evaluación y venza ese período de reserva.
 
 ---
 
@@ -257,7 +250,7 @@ Qué pasó — camino de disclosure, no de issue tracker:
 | 12 | golangci-lint #6714 | **Closed (declined)** | Sí — declined, respondimos, sin reapertura |
 | 13 | stylelint #9438 | Open | No |
 | 14 | oxc discussion #22198 | Comentario publicado | No (1 like, sin reply) |
-| 15 | MS Agent Governance Toolkit (MSRC) | **Review/Repro**, case 136137 | En cola activa, sin mensaje humano aún |
+| 15 | Reporte de seguridad (MSRC) | **Caso abierto, bajo reserva** | Detalles reservados hasta el fin del período de disclosure |
 | 16 | bandit #1467 | Open | No (recién posteado) |
 | 17 | checkov #7647 | Open | No (recién posteado) |
 | 18 | diff_cover #619 | **Closed (completed)** | No — cerrado sin comentario ni PR/commit vinculado |
