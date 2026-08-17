@@ -79,7 +79,7 @@ Qué pasó — con historia real:
 ## 6 · github/spec-kit #4106 — el caso con más interacción
 
 **Link**: https://github.com/github/spec-kit/issues/4106
-**Estado**: Open. Colaboración activa, en curso.
+**Estado**: Open. Colaboración activa, en curso. Hay además una PR de un tercero sobre este issue, con cambios pedidos por el mantenedor.
 
 Qué planteé: `/speckit.analyze` no detecta cuando un vocabulario cerrado (un set de valores admisibles) se enumera distinto en distintas partes de una spec — ni la verificación estructural ni el oráculo de trayectorias lo cubren. Con un caso medido propio: un sistema de 40 módulos generado por contrato, 4 defectos sobrevivieron verificación completa, los 4 eran la misma clase de error (transcripción de una definición), uno de ellos exactamente este.
 
@@ -98,9 +98,15 @@ Qué pasó — historia sustancial:
 
 — Reporté medición de campo sobre 11 contratos reales propios: 5 no aplican, 6 con 303 declaraciones inspeccionadas, 44 reconocidas (15%), 0 divergencias — con la limitación declarada de que sé que hay una divergencia real en ese corpus que el check no puede alcanzar (es contra la fuente, no entre declaraciones).
 
-— **mnriem**, 17-ago-2026: *"Looks like solid progress. Have you rolled it into a preset we can include in the community catalog? Did I miss that?"* — pide el preset explícitamente y menciona inclusión en el community catalog. El issue tiene rama vinculada `feat(analyze): detect closed vocabulary drift`.
+— **mnriem**, 17-ago-2026: *"Looks like solid progress. Have you rolled it into a preset we can include in the community catalog? Did I miss that?"* — pide el preset explícitamente y menciona inclusión en el community catalog.
 
-— Issue sigue abierto. **Pendiente y sin responder: la pregunta de mnriem del 17-ago.** Antes hay que establecer el estado real del preset (construido / probado end-to-end / listo para catálogo).
+— **Un tercero abrió una PR sobre este issue: `github/spec-kit#4160`**, "feat(analyze): detect closed vocabulary drift", por **AnkitPorwal04**, desde `AnkitPorwal04:feat/4106-closed-vocabulary-analysis`, declarando *"Fixes #4106"*. No tengo relación con esa PR ni forkeé el repo. Su propio disclosure declara que fue implementada, testeada y redactada de forma autónoma por OpenAI Codex (GPT-5), y que el operador humano eligió el objetivo pero no revisó el patch línea por línea antes de mandarlo. Mete el pass directo en el core bundled (`templates/commands/analyze.md` más un test), 2 archivos, 1 commit, checks en verde.
+
+— **Estado de esa PR: mnriem pidió cambios** ("Please address Copilot feedback"). El review automático marcó, entre otras cosas, dos puntos que tocan directamente lo que planteé: (1) que meter el pass en el core saltea el rollout acordado en este issue, que era preset primero y después catálogo; y (2) que reportar solo el mismatch count sin cobertura de reconocimiento deja un cero indistinguible de un pass que no reconoció nada — el mismo argumento de count-sin-identidad del issue origen, encontrado de forma independiente.
+
+— Estado real de mi preset al 17-ago: construido y funcionando con `specify preset add --dev`, versión 1.0.0, composición verificada sobre proyecto limpio (383 líneas materializadas, core intacto en la línea 161, pass agregado en la 269), y corrida end-to-end hecha contra las tres fixtures con un modelo leyendo la prosa compuesta — los tres resultados coinciden con la corrida mecánica. **No está listo para el catálogo**: faltan repo público, LICENSE y README con comando de instalación, más dos correcciones que la propia corrida end-to-end sacó a la luz (la unidad de `declarations inspected` no está definida, y un nombre ambiguo en la fixture 003 que no altera el resultado pero conviene declarar).
+
+— Issue sigue abierto. **Pendiente y sin responder: la pregunta de mnriem del 17-ago.**
 
 ---
 
@@ -463,7 +469,7 @@ Caso 4 — openrewrite/rewrite #8498 — Open — sin historia
 
 Caso 5 — Hypothesis #4854 — **Closed** — cerrado por política AI, respondí, sin reapertura
 
-Caso 6 — spec-kit #4106 — Open — **colaboración activa; mnriem pidió el preset para el catálogo, sin responder**
+Caso 6 — spec-kit #4106 — Open — **colaboración activa; mnriem pidió el preset para el catálogo, sin responder; PR de un tercero (#4160) con cambios pedidos**
 
 Caso 7 — eslint #21223 — Open — mantenedor pidió clarificación, respondí, a la espera
 
