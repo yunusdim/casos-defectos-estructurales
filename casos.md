@@ -1,8 +1,8 @@
 # Casos — defectos estructurales reportados
 
-Corte: 2026-08-17, segunda actualización del día (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión.
+Corte: 2026-08-18, tras auditoría en vivo de los 33 casos. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión.
 
-Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso). 7 cerrados: 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). 7 con intercambio real con mantenedor o colaborador — el más fuerte, SwiftLint #6871, ya tiene PR de fix abierta por un tercero; jscpd #938 tiene un diseño completo de baseline aceptado por el mantenedor (kucherenko); eslint #21223 tiene una pregunta de clarificación del mantenedor (mdjermanovic) ya respondida. MSRC: caso abierto, bajo reserva por pedido de MSRC. El resto, sin respuesta todavía.
+Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso). 7 cerrados: 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). 7 con intercambio real con mantenedor o colaborador — el más fuerte, SwiftLint #6871, ya tiene PR de fix abierta por un tercero; jscpd #938 tiene un diseño completo de baseline aceptado por el mantenedor (kucherenko); eslint #21223 quedó etiquetado `core` y `feature` tras responder al mantenedor (mdjermanovic), con un colaborador ofreciéndose a implementarlo; stylelint #9438 fue retitulado por el mantenedor (jeddy3) y aceptado como pedido de función. MSRC: caso abierto, bajo reserva por pedido de MSRC. El resto, sin respuesta todavía.
 
 ---
 
@@ -106,20 +106,26 @@ Qué pasó — historia sustancial:
 
 — **Estado de esa PR: mnriem pidió cambios** ("Please address Copilot feedback"). El review automático marcó, entre otras cosas, dos puntos que tocan directamente lo que planteé: (1) que meter el pass en el core saltea el rollout acordado en este issue, que era preset primero y después catálogo; y (2) que reportar solo el mismatch count sin cobertura de reconocimiento deja un cero indistinguible de un pass que no reconoció nada — el mismo argumento de count-sin-identidad del issue origen, encontrado de forma independiente.
 
-— Respondí el 17-ago-2026 abriendo con "Not yet", con la evidencia de composición (383 líneas materializadas, core intacto en la línea 161, pass agregado en la 269), la corrida end-to-end contra las tres fixtures con un modelo leyendo la prosa compuesta —los tres resultados coinciden con la corrida mecánica—, los tres archivos que faltaban, y el plan de submission. Declaré también que #4160 no es mía y que no estuve involucrado, y aporté dos hallazgos que le pegan: el punto de cobertura es el mismo que el review automático ya había levantado, y el problema de unidad de `declarations inspected` aplica a cualquier implementación en prosa de este pass, incluida esa.
+— Respondí el 17-ago-2026 abriendo con "Not yet", con la evidencia de composición (383 líneas materializadas, core intacto en la línea 161, pass agregado en la 269), la verificación mecánica de las reglas contra las tres fixtures, los tres archivos que faltaban, y el plan de submission. Declaré también que #4160 no es mía y que no estuve involucrado, y aporté dos hallazgos que le pegan: el punto de cobertura es el mismo que el review automático ya había levantado, y el problema de unidad de `declarations inspected` aplica a cualquier implementación en prosa de este pass, incluida esa.
 
 — **Preset publicado el 17-ago-2026**: `github.com/yunusdim/spec-kit-preset-closed-vocabulary`, MIT, 14 archivos, tag `v1.0.0`. Las dos correcciones que había comprometido quedaron aplicadas antes de tagear: la unidad de `declarations inspected` fijada en líneas no vacías, y la regla de relación declarada explicitada como evaluada antes de agrupar, con el caso `shipment status` / `order status` como ejemplo de que la estabilidad es por regla y no por suerte.
 
-— **Entrada submiteada al catálogo**: PR `github/spec-kit#4179`, desde `yunusdim:patch-1`, con la entrada ordenada alfabéticamente entre `claude-ask-questions` y `command-density`. `download_url` coincide carácter por carácter con el comando de instalación del README. No pedí el label `preset-submission` — lo aplica un mantenedor en triage.
+— **Entrada submiteada al catálogo**: PR `github/spec-kit#4179`, desde `yunusdim:patch-1`, con la entrada ordenada alfabéticamente entre `claude-ask-questions` y `command-density`. `download_url` coincide carácter por carácter con el comando de instalación del README. No pedí el label `preset-submission` — lo aplica un mantenedor en triage. Faltaba además la fila en la tabla de `docs/community/presets.md` que exige `PUBLISHING.md`; quedó agregada en la misma rama.
 
-— Issue sigue abierto. Pendiente: respuesta de mnriem.
+— **Corrección, 18-ago-2026.** La versión anterior de esta entrada, y el propio cuerpo del PR #4179, afirmaban que la corrida end-to-end se había hecho con un modelo leyendo la prosa compuesta y que los tres resultados coincidían con la corrida mecánica. Eso no había ocurrido: lo verificado era mecánico, regla por regla, contra las tres fixtures. Peor, el `evidence/RESULTS.md` que viajaba dentro del tag `v1.0.0` declaraba la tabla de resultados como pendiente, contradiciendo la afirmación desde el propio release. Lo levantó el review automático de Copilot en el PR. Corregido en el cuerpo del PR, en el comentario de este issue, y acá.
+
+— **Release `v1.0.1`, 18-ago-2026**: `evidence/RESULTS.md` con la tabla completada desde corridas reales — `001-divergent` dispara, `002-agreeing` y `003-declared-subset` quedan en silencio, cada una con su cobertura declarada. El catálogo y la fila de la documentación apuntan a ese tag.
+
+— **Issue de submission `github/spec-kit#4192`, 18-ago-2026**: mnriem pidió abrirlo para que corran los workflows automáticos del catálogo — la validación se dispara sobre el issue, no sobre el PR. Creado con la plantilla oficial. Label `enhancement`, sin `preset-submission` todavía.
+
+— Issue sigue abierto. Último comentario de mnriem: *"Nice progress!"*. Pendiente, y todo de terceros: aprobación de los workflows del PR #4179 y cierre de CodeQL, más el label `preset-submission` sobre #4192 en triage.
 
 ---
 
 ## 7 · eslint/eslint #21223
 
 **Link**: https://github.com/eslint/eslint/issues/21223
-**Estado**: Open. Con historia — pregunta de clarificación del mantenedor, ya respondida.
+**Estado**: Open, labels `core` y `feature`, en triage. Con historia — clarificación del mantenedor respondida, y un colaborador ofreciéndose a implementarlo.
 
 Qué planteé: distinguí este pedido de dos issues previos relacionados y cerrados (#19321 cerrado como duplicado de #17609; #17609 resuelto por detección de fixes circulares en v9.23.0) — argumenté que la detección circular no cubre el caso real: salida silenciosa por `MAX_AUTOFIX_PASSES` agotado con fixes pendientes. Mismo argumento de fondo que en openrewrite: presupuesto agotado no es un resultado, es un control.
 
@@ -129,7 +135,9 @@ Qué pasó — verificado en vivo el 16-ago-2026:
 
 — Confirmé: *"Yes, exactly that — emit a warning (or equivalent) when the loop exits at MAX_AUTOFIX_PASSES with fixable errors still remaining, distinct from the existing circular-fix warning."*
 
-— Issue sigue abierto, a la espera de que el mantenedor avance con la implementación o dé el siguiente paso.
+— **18-ago-2026**: el issue quedó etiquetado `core` y `feature`, y entró al proyecto Triage. **solp721** revisó `verifyAndFix` y confirmó el diagnóstico desde el código — la salida por límite de pasadas cae del loop sin registrar nada, mientras el caso circular ya pasa por `WarningService` — y cerró ofreciéndose: *"if you aren't planning to implement this yourself, I'd like to give it a shot once it's accepted."*
+
+— Pendiente, y es mío: decidir si lo implemento o le paso la posta.
 
 ---
 
@@ -212,11 +220,11 @@ Qué pasó — con historia real:
 ## 13 · stylelint/stylelint #9438
 
 **Link**: https://github.com/stylelint/stylelint/issues/9438
-**Estado**: Open. Sin historia — 0 comentarios.
+**Estado**: Open, retitulado y etiquetado por el mantenedor. Con historia.
 
 Qué planteé: `stylelint-suppressions.json` (Bulk Suppressions, modelado explícitamente sobre el RFC de ESLint, PR #8564) tiene el mismo defecto que #21226: count por `(file, rule)`, no por violación. Verificado con stylelint 17.14.1 empíricamente en un entorno de test local. A diferencia de ESLint, stylelint ni siquiera tiene un equivalente a `--prune-suppressions` — no hay ningún camino de auditoría.
 
-Qué pasó: nada aún.
+Qué pasó — verificado en vivo el 18-ago-2026: **jeddy3** (mantenedor) retituló el issue, de *"Bulk suppressions bucket by (file, rule) count, not identity: a same-count swap is invisible"* a *"Add support for auditing to bulk suppressions"*, le puso `status: needs discussion` y `triage needs further discussion`, y respondió: *"Thanks for the report. Let's wait to see what ESLint does."* El retítulo es la aceptación: pasó de reporte de bug a pedido de función. Queda enganchado a eslint #21226, que es el issue origen.
 
 ---
 
@@ -481,9 +489,9 @@ Caso 4 — openrewrite/rewrite #8498 — Open — sin historia
 
 Caso 5 — Hypothesis #4854 — **Closed** — cerrado por política AI, respondí, sin reapertura
 
-Caso 6 — spec-kit #4106 — Open — **respondido; preset publicado con tag v1.0.0 y submiteado al catálogo (PR #4179); PR de un tercero (#4160) con cambios pedidos**
+Caso 6 — spec-kit #4106 — Open — **respondido; preset publicado, hoy en `v1.0.1`; catálogo submiteado (PR #4179) e issue de submission (#4192); PR de un tercero (#4160) con cambios pedidos; afirmación corregida el 18-ago**
 
-Caso 7 — eslint #21223 — Open — mantenedor pidió clarificación, respondí, a la espera
+Caso 7 — eslint #21223 — Open — labels `core` y `feature`; **un colaborador se ofrece a implementarlo, decisión pendiente mía**
 
 Caso 8 — phpstan #15078 — **Closed (completed)** — respuesta hostil, respondí, mantenedor volvió con respuesta técnica sustantiva y cerró
 
@@ -495,7 +503,7 @@ Caso 11 — SwiftLint #6871 — Open — **confirmado + PR de fix (#6872) por un
 
 Caso 12 — golangci-lint #6714 — **Closed (declined)** — declined, respondí, sin reapertura
 
-Caso 13 — stylelint #9438 — Open — sin historia
+Caso 13 — stylelint #9438 — Open — **retitulado y aceptado por el mantenedor como pedido de función**, esperando a ESLint
 
 Caso 14 — oxc discussion #22198 — comentario publicado — sin historia (1 like, sin reply)
 
