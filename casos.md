@@ -47,7 +47,11 @@ Qué pasó — verificado en vivo el 17-ago-2026:
 
 — Respondí el 17-ago-2026: concedí el punto del wildcard, acepté el descarte de (a) por el argumento del linter stateless, y **tomé la PR de (b)**. Adopté el formato que él mismo propuso, respondí su reserva de que el conteo por sí solo no deja ver los aumentos (correcto dentro de una corrida, pero el número queda en el log del build y el aumento aparece en un diff de CI entre corridas), y dejé tres definiciones a cerrar antes de escribir la PR: nombre y default del flag (`--show-ignored-counts`, off por default), caso cero (omitir el paréntesis o imprimir `(0 ignored imports)`), y semántica del conteo (aristas del grafo ignoradas vs entradas de `ignore_imports` que matchearon — para un wildcard que cubre 12 aristas dan 12 y 1; propuse aristas).
 
-— Pendiente: respuesta de seddonym a esas tres definiciones. Sin eso no se puede escribir la PR.
+— **seddonym respondió el 19-ago-2026 con la especificación cerrada**: sin flag nueva ("just add it to the output"), se omite el paréntesis si el conteo es cero, y el conteo es el tamaño del set `imports_to_remove` de `remove_ignored_imports` — exactamente lo que yo había propuesto como default. Dio además el formato de salida exacto.
+
+— **PR abierta el 19-ago-2026: `seddonym/import-linter#376`**, "Show count of ignored imports in contract output", contra `main`. Implementa la especificación al detalle: la función devuelve ahora `(warnings, ignored_import_count)`, los cinco tipos de contrato lo propagan a `ContractCheck`, y `render_contract_result_line` imprime el sufijo nuevo, omitido en cero. Test unitario existente actualizado con el conteo esperado, más entradas en `docs/release_notes.md` y `docs/authors.md`. Corrida real de `pytest` (243 tests) y del comando `import-linter lint` contra un proyecto de prueba, con salida idéntica al ejemplo que dio el propio seddonym.
+
+— Pendiente: revisión de seddonym sobre la PR #376.
 
 ---
 
@@ -483,7 +487,7 @@ Caso 1 — ArchUnit #1700 — Open — sin historia
 
 Caso 2 — dependency-cruiser #1078 — Open — sin historia
 
-Caso 3 — import-linter #375 — Open — **owner aceptó (b) y ofreció PR; la tomé, esperando sus tres definiciones**
+Caso 3 — import-linter #375 — Open — **spec cerrada por el owner el 19-ago; PR #376 abierta el mismo día, esperando revisión**
 
 Caso 4 — openrewrite/rewrite #8498 — Open — sin historia
 
