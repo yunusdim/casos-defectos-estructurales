@@ -51,7 +51,13 @@ Qué pasó — verificado en vivo el 17-ago-2026:
 
 — **PR abierta el 19-ago-2026: `seddonym/import-linter#376`**, "Show count of ignored imports in contract output", contra `main`. Implementa la especificación al detalle: la función devuelve ahora `(warnings, ignored_import_count)`, los cinco tipos de contrato lo propagan a `ContractCheck`, y `render_contract_result_line` imprime el sufijo nuevo, omitido en cero. Test unitario existente actualizado con el conteo esperado, más entradas en `docs/release_notes.md` y `docs/authors.md`. Corrida real de `pytest` (243 tests) y del comando `import-linter lint` contra un proyecto de prueba, con salida idéntica al ejemplo que dio el propio seddonym.
 
-— Pendiente: revisión de seddonym sobre la PR #376.
+— **seddonym revisó la PR el 19-ago-2026 y pidió cambios** (`requested changes`), con tres observaciones. Una de formato: que el conteo de ignorados no se imprima como un bloque aparte del de warnings sino combinado en una sola cláusula (`My contract KEPT (19 ignored imports, 1 warning)`), y dio los cuatro casos exactos. Una de cobertura: `render_contract_result_line` no tenía ningún test, y señaló dónde agregarlo y que había que darle soporte al contrato de prueba para recibir el conteo. Y una de compatibilidad hacia atrás, la de fondo: cambiar el tipo de retorno de `remove_ignored_imports` de `list[str]` a tupla rompe a quien tenga contratos personalizados que la llamen. Pidió un camino de transición — parámetro opcional o función nueva, con `DeprecationWarning` anunciando el cambio para 2.15 — y de paso propuso devolver un objeto más rico, `ImportRemoval`, con los imports removidos y los warnings.
+
+— Le pregunté cuál de las dos opciones de compatibilidad prefería antes de escribir nada. Respondió el 19-ago que le daba lo mismo: *"I'm not sure. I'd like to get to a point where the API is clean again in a further release, open to either approach, whichever seems best."*
+
+— **Los tres cambios se pushearon el 23-ago-2026, commit `7a16f7d`.** El sufijo ahora es una sola cláusula que combina ambos conteos, omitiendo la parte que valga cero. Se agregó `TestRenderContractResultLine` cubriendo las cuatro combinaciones más el caso BROKEN, con el campo `ignored_import_count` sumado al contrato de prueba tal como él indicó. Para la compatibilidad elegí la función nueva, por su propio criterio de que la API termine limpia: `remove_ignored_imports` conserva su firma y su comportamiento pero emite `DeprecationWarning` apuntando a 2.15, y la nueva `remove_ignored_imports_and_report` devuelve el `ImportRemoval` que él bosquejó, con `ignored_import_count` como propiedad derivada de `removed_imports`. Los cinco tipos de contrato pasaron a la función nueva. Corrida real de `pytest` (475 tests, excluyendo los que requieren el extra `[ui]`) y del CLI, con la salida combinada verificada. Tras el push GitHub marcó las tres observaciones como `Outdated`.
+
+— Pendiente: segunda revisión de seddonym. Los checks de CI están en `workflow awaiting approval` — para contribuidores externos requieren aprobación manual de un maintainer.
 
 ---
 
@@ -487,7 +493,7 @@ Caso 1 — ArchUnit #1700 — Open — sin historia
 
 Caso 2 — dependency-cruiser #1078 — Open — sin historia
 
-Caso 3 — import-linter #375 — Open — **spec cerrada por el owner el 19-ago; PR #376 abierta el mismo día, esperando revisión**
+Caso 3 — import-linter #375 — Open — **PR #376: cambios de la review aplicados el 23-ago (commit `7a16f7d`), esperando segunda revisión**
 
 Caso 4 — openrewrite/rewrite #8498 — Open — sin historia
 
