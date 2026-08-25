@@ -57,7 +57,9 @@ Qué pasó — verificado en vivo el 17-ago-2026:
 
 — **Los tres cambios se pushearon el 23-ago-2026, commit `7a16f7d`.** El sufijo ahora es una sola cláusula que combina ambos conteos, omitiendo la parte que valga cero. Se agregó `TestRenderContractResultLine` cubriendo las cuatro combinaciones más el caso BROKEN, con el campo `ignored_import_count` sumado al contrato de prueba tal como él indicó. Para la compatibilidad elegí la función nueva, por su propio criterio de que la API termine limpia: `remove_ignored_imports` conserva su firma y su comportamiento pero emite `DeprecationWarning` apuntando a 2.15, y la nueva `remove_ignored_imports_and_report` devuelve el `ImportRemoval` que él bosquejó, con `ignored_import_count` como propiedad derivada de `removed_imports`. Los cinco tipos de contrato pasaron a la función nueva. Corrida real de `pytest` (475 tests, excluyendo los que requieren el extra `[ui]`) y del CLI, con la salida combinada verificada. Tras el push GitHub marcó las tres observaciones como `Outdated`.
 
-— Pendiente: segunda revisión de seddonym. Los checks de CI están en `workflow awaiting approval` — para contribuidores externos requieren aprobación manual de un maintainer.
+— **Mergeada el 24-ago-2026.** seddonym la aceptó e incorporó a `main`, cerrando el issue #375 como completado. Antes del merge aplicó él mismo cuatro ajustes de criterio propio: acortó la nota de release, retiró un comentario explicativo, quitó el `DeprecationWarning` de `remove_ignored_imports` — conservando la función nueva pero sin el aviso — y unificó el color del conteo de ignorados con el de los warnings. La rama quedó en 7 commits, 309 líneas agregadas y 19 eliminadas.
+
+— Resultado del caso: planteo aceptado en su parte (b), especificado por el owner, implementado y **mergeado al proyecto**. La feature queda en la próxima release de import-linter, y la autoría figura en `docs/authors.md` del repositorio.
 
 ---
 
@@ -493,7 +495,7 @@ Caso 1 — ArchUnit #1700 — Open — sin historia
 
 Caso 2 — dependency-cruiser #1078 — Open — sin historia
 
-Caso 3 — import-linter #375 — Open — **PR #376: cambios de la review aplicados el 23-ago (commit `7a16f7d`), esperando segunda revisión**
+Caso 3 — import-linter #375 — **Closed (completed)** — PR #376 mergeada el 24-ago; la feature entra al proyecto
 
 Caso 4 — openrewrite/rewrite #8498 — Open — sin historia
 
