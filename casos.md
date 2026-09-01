@@ -185,11 +185,23 @@ Qué pasó: nada aún.
 ## 10 · eslint/eslint #21226 — el caso original de la línea de trabajo
 
 **Link**: https://github.com/eslint/eslint/issues/21226
-**Estado**: Open. Sin respuesta directa de mantenedores — solo etiquetado automático (`core`, `enhancement`) y bot de triage.
+**Estado**: Open. **Respuesta del mantenedor el 30-ago: pidió caso de uso concreto. Respondida el 1-sep con repro verificado y pedido acotado.** Labels `core`, `enhancement`, `needs info`.
 
 Qué planteé: `eslint-suppressions.json` bucketiza por `(file, rule) → count`, no por identidad de violación. Reproducido: 2 violaciones reales suprimidas (count: 2), arreglé una, introduje otra distinta en el mismo archivo, el count se mantiene en 2 — ni el lint normal ni `--prune-suppressions` (la herramienta de auditoría dedicada) lo detectan. Pedí que `--prune-suppressions` marque, al menos como warning, buckets donde el count coincide pero el set de ocurrencias cambió.
 
-Qué pasó: este es el issue origen — todos los demás casos de "count sin identidad" (stylelint, oxc, golangci-lint, phpstan, swiftlint) citan este issue como precedente. Sin respuesta de mantenedores de ESLint todavía.
+Qué pasó: este es el issue origen — todos los demás casos de "count sin identidad" (stylelint, oxc, golangci-lint, phpstan, swiftlint) citan este issue como precedente.
+
+— **fasttime (mantenedor) respondió el 30-ago-2026 con una objeción de forma, no de fondo**: que estaba planteado como lluvia de ideas y no como pedido de cambio, que la única referencia externa era un texto mío, y que sin un caso de uso concreto no podían convertirlo en tarea accionable. Ofreció como alternativa aclarar la documentación. El issue quedó etiquetado `needs info`.
+
+— **Respondí el 1-sep-2026 concediendo la objeción de encuadre** — era un planteo de problema, no un pedido de cambio — y aportando lo que faltaba. Repro verificado contra **v10.9.1** (más nueva que la v10.8.1 del reporte original, así que el comportamiento sigue vigente), más dos controles que aíslan el defecto: con el count subiendo de 1 a 3 reporta las tres violaciones y sale con código 1; con el count bajando de 2 a 1, `--prune-suppressions` reescribe el archivo correctamente; con el count igual y el conjunto intercambiado, no pasa nada en ninguno de los dos comandos. El mecanismo funciona en ambas direcciones del cambio de conteo y falla solo en el swap — eso lo vuelve un hueco puntual y no el diseño previsto.
+
+— Caso de uso declarado: un equipo adopta supresiones en masa sobre un archivo heredado para destrabar CI, con intención de ir bajando el bucket. Alguien arregla una violación y escribe otra de la misma regla en el mismo archivo. CI queda verde, el count no se mueve, `--prune-suppressions` no reporta nada, y la señal de que la deuda baja nunca se dispara. El equipo no recibe crédito por el arreglo ni aviso por la regresión.
+
+— Pedido acotado y compatible hacia atrás: dejar `count` como está —ninguna corrida existente cambia de comportamiento— y guardar junto a él un digest derivado del contenido por bucket `(archivo, regla)`, por ejemplo un hash sobre los mensajes de violación ordenados, para que `--prune-suppressions` avise cuando el digest cambia y el conteo no. No es por número de línea, así que ediciones en otra parte del archivo siguen sin romper el matching. Versión mínima alternativa ofrecida: un flag que solo reporte los buckets que cambiaron de identidad, sin hacer fallar la corrida.
+
+— Deliberadamente no cité ningún texto propio en la respuesta. La objeción de fasttime sobre la autorreferencia era correcta.
+
+— Pendiente: respuesta de ESLint.
 
 ---
 
@@ -262,11 +274,15 @@ Qué pasó: reporté una vulnerabilidad de seguridad de un proyecto de terceros 
 ## 16 · PyCQA/bandit #1467
 
 **Link**: https://github.com/PyCQA/bandit/issues/1467
-**Estado**: Open. Recién posteado, sin respuesta todavía.
+**Estado**: Open. **Reproducido por un tercero, que además escribió el fix.**
 
-Qué planteé: baseline por `Issue.__eq__` sin `lineno`, matching por pertenencia no multiplicidad, absorbe N hallazgos sin límite.
+Qué planteé: baseline por `Issue.__eq__` sin `lineno`, matching por pertenencia y no por multiplicidad, absorbe N hallazgos sin límite.
 
-Qué pasó: nada aún.
+Qué pasó: **MGpromax** lo reprodujo sobre `main` el 25-ago-2026 con los pasos exactos del reporte: un baseline B105 de una sola entrada, ya viejo, absorbió dos violaciones B105 nuevas — salida `"No issues identified."` y código 0, mientras el pie de métricas seguía contando `Medium: 2`. La contradicción entre el veredicto y el propio contador de la herramienta quedó a la vista.
+
+Escribió además un fix y lo dejó en una rama pública, porque **el repositorio no permite abrir pull requests a no colaboradores** (`CreatePullRequest` rechazado). Su enfoque deja `Issue.__eq__` intacto —los baselines siguen tolerando desplazamientos de línea— y corrige solo la comparación, para que sea sensible a multiplicidad.
+
+Sin respuesta de mantenedores todavía. Sin pregunta pendiente de mi lado.
 
 ---
 
@@ -339,11 +355,13 @@ Qué pasó: nada aún.
 ## 23 · gitleaks/gitleaks #2239
 
 **Link**: https://github.com/gitleaks/gitleaks/issues/2239
-**Estado**: Open. Recién posteado, sin respuesta todavía.
+**Estado**: Open. **Reproducido de forma independiente por un tercero contra master.**
 
-Qué planteé: en vivo — `.gitleaksignore` fingerprint `file:rule:line` sin contenido del secreto.
+Qué planteé: en vivo — el fingerprint de `.gitleaksignore` es `file:rule:line` y no incorpora el contenido del secreto, así que la línea queda suprimida sin importar qué secreto tenga.
 
-Qué pasó: nada aún.
+Qué pasó: **CAOShurong** lo reprodujo de punta a punta el 25-ago-2026 contra el master vigente (`b58d3f1`), compilando el binario localmente y en modo sin git. Confirmó los tres pasos: detección inicial con fingerprint `config.py:generic-api-key:1`; supresión correcta al agregarlo a `.gitleaksignore`; y —el punto del reporte— reemplazo del secreto por otro completamente distinto en la misma línea, con el resultado `no leaks found` y código de salida 0. Un secreto real y no relacionado queda permanentemente invisible sobre una línea ya ignorada.
+
+Sin respuesta de mantenedores todavía. Sin pregunta pendiente de mi lado.
 
 ---
 
@@ -371,11 +389,11 @@ Qué pasó: nada aún.
 ## 25 · webpro-nl/knip #1949
 
 **Link**: https://github.com/webpro-nl/knip/issues/1949
-**Estado**: Open. Recién posteado, sin respuesta todavía.
+**Estado**: **Closed. Aceptado por el mantenedor y absorbido en un issue existente.**
 
-Qué planteé: `--max-issues` gatea por count agregado.
+Qué planteé: `--max-issues` gatea por count agregado, así que arreglar un export muerto e introducir otro distinto en otro lado deja CI en verde.
 
-Qué pasó: nada aún.
+Qué pasó: **webpro** (mantenedor) respondió el 31-ago-2026: *"Good point. This is what #1532 will fix properly."* Cerró este issue derivándolo a `#1532`, que ya estaba abierto y aborda el problema de raíz. Aceptación sin discusión y sin trabajo pendiente de mi lado.
 
 ---
 
@@ -399,7 +417,11 @@ Qué pasó — con historia real:
 ## 27 · kucherenko/jscpd #938
 
 **Link**: https://github.com/kucherenko/jscpd/issues/938
-**Estado**: Open. **Mantenedor aceptó el planteo, diseño de baseline publicado.**
+**Estado**: **Closed — implementado y publicado en la release v5.1.0 el 30-ago-2026.**
+
+**Resultado**: kucherenko cerró el issue anunciando que quedó resuelto en [v5.1.0](https://github.com/kucherenko/jscpd/releases/tag/v5.1.0) mediante el baseline de clones: los fingerprints son hashes de contenido de cada par de clones, así que el gate pasó a ser sensible a identidad en vez de porcentaje agregado. Sobre el repro original, el swap de instancias ya no es silencioso — con `--baseline .jscpd-baseline.json --fail-on-new-clones`, arreglar el par fileA/fileB e introducir otro par distinto hace fallar la corrida porque el fingerprint nuevo no está en el baseline, sin importar que el porcentaje total siga bajo el `--threshold`. Y `--update-baseline` imprime los fingerprints agregados y quitados.
+
+Los dos puntos que había levantado quedaron cubiertos: identidad en lugar de agregado, y regeneración no silenciosa.
 
 Qué planteé: `ThresholdReporter` solo mira % agregado.
 
@@ -509,7 +531,7 @@ Caso 8 — phpstan #15078 — **Closed (completed)** — respuesta hostil, respo
 
 Caso 9 — rubocop #15570 — Open — sin historia
 
-Caso 10 — eslint #21226 — Open — sin historia (es el issue-origen citado por los demás)
+Caso 10 — eslint #21226 — Open — **el mantenedor pidió caso de uso concreto el 30-ago; respondido el 1-sep con repro en v10.9.1 y pedido acotado**
 
 Caso 11 — SwiftLint #6871 — Open — **confirmado + PR de fix (#6872) por un colaborador; le respondí en la PR con el residuo del grupo completo**
 
@@ -521,7 +543,7 @@ Caso 14 — oxc discussion #22198 — comentario publicado — sin historia (1 l
 
 Caso 15 — Reporte de seguridad MSRC — **caso abierto, bajo reserva** — detalles no publicados hasta el fin del período de disclosure
 
-Caso 16 — bandit #1467 — Open — sin historia
+Caso 16 — bandit #1467 — Open — **reproducido por un tercero, que además escribió el fix**; bloqueado porque el repo no acepta PRs externas
 
 Caso 17 — checkov #7647 — Open — sin historia
 
@@ -535,17 +557,17 @@ Caso 21 — eslint-seatbelt #30 — Open — sin historia
 
 Caso 22 — codecov/umbrella #1989 — Open — sin historia
 
-Caso 23 — gitleaks #2239 — Open — sin historia
+Caso 23 — gitleaks #2239 — Open — **reproducido contra master por un tercero**, esperando a los mantenedores
 
 — mypy-baseline — **bloqueado, sin issue** — vulnerable confirmado en vivo, repo no acepta issues públicas
 
 Caso 24 — vulture #430 — Open — sin historia
 
-Caso 25 — knip #1949 — Open — sin historia
+Caso 25 — knip #1949 — **Closed** — aceptado por el mantenedor y derivado a `#1532`, que lo arregla de raíz
 
 Caso 26 — deptry #1654 — **Closed (not planned)** — "AI slop", respondí con tono neutro, sin reapertura
 
-Caso 27 — jscpd #938 — Open — **mantenedor aceptó el planteo y publicó el diseño; le respondí con multiplicidad de fingerprint y regeneración no silenciosa**
+Caso 27 — jscpd #938 — **Closed (implementado)** — el mantenedor publicó **v5.1.0** con el baseline de clones; los dos puntos que levanté quedaron dentro
 
 Caso 28 — simian #23 — Open — sin historia
 
