@@ -2,7 +2,7 @@
 
 Corte: 2026-09-08. Abre la segunda línea de casos, sobre gobierno determinista de contexto, a partir de RICK Runtime v9. La auditoría en vivo de los 33 casos de la primera línea es del 18-ago. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión.
 
-Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos en la primera línea (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso), más 6 en la segunda: 39 en total. 10 cerrados: 3 con resultado a favor (import-linter #375 completed con la PR #376 mergeada y crédito en docs/authors.md; jscpd #938 implementado y publicado en la release v5.1.0; knip #1949 aceptado y derivado a #1532), 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). Entre los abiertos con intercambio real: SwiftLint #6871 tiene PR de fix abierta por un tercero; dependency-cruiser #1078 con las dos propuestas aceptadas como trabajo futuro; eslint #21223 etiquetado `core` y `feature`, con la implementación en discusión en el equipo; eslint #21226 respondido con repro verificado tras el pedido de caso de uso; stylelint #9438 retitulado por el mantenedor (jeddy3) y aceptado como pedido de función; gitleaks #2239 y bandit #1467 reproducidos de forma independiente por terceros. MSRC: cerrado el 24-ago-2026 como Low severity, sin CVE, fix planificado — detalle completo en el caso 15. El resto, sin respuesta todavía.
+Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos en la primera línea (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso), más 8 en la segunda: 41 en total. 10 cerrados: 3 con resultado a favor (import-linter #375 completed con la PR #376 mergeada y crédito en docs/authors.md; jscpd #938 implementado y publicado en la release v5.1.0; knip #1949 aceptado y derivado a #1532), 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). Entre los abiertos con intercambio real: SwiftLint #6871 tiene PR de fix abierta por un tercero; dependency-cruiser #1078 con las dos propuestas aceptadas como trabajo futuro; eslint #21223 etiquetado `core` y `feature`, con la implementación en discusión en el equipo; eslint #21226 respondido con repro verificado tras el pedido de caso de uso; stylelint #9438 retitulado por el mantenedor (jeddy3) y aceptado como pedido de función; gitleaks #2239 y bandit #1467 reproducidos de forma independiente por terceros. MSRC: cerrado el 24-ago-2026 como Low severity, sin CVE, fix planificado — detalle completo en el caso 15. El resto, sin respuesta todavía.
 
 ---
 
@@ -600,9 +600,33 @@ Qué pasó: nada aún.
 
 ---
 
-## Descartados de esta línea, con motivo
+## 40 · github/copilot-cli #3945
 
-`open-webui#26710` (el resumen de compactación pisaba el system prompt), `#26836` y `#27035`: los tres **cerrados**, el primero por tjbck con "Addressed in dev.". El repo se mueve rápido y arregla; no hacía falta comentario.
+**Link**: https://github.com/github/copilot-cli/issues/3945
+**Estado**: Open, label `Bug`.
+
+Qué planteé: laeubi creó un repo nuevo y vacío, y Copilot le habló de "hechos guardados en la memoria" que pertenecían a otro repo de nombre parecido. El detalle que identifica el mecanismo está en su seguimiento y nadie lo había levantado: la memoria filtrada **contenía una ruta local de otra computadora**. Eso dice que la clave de scope es derivada, no declarada, y derivada de algo que no es una identidad — un nombre de repo no es único y una ruta no es portable. Cualquier clave calculada del entorno colisiona tarde o temprano en uno de esos dos ejes, y la colisión es silenciosa porque nada compara la clave contra una declaración.
+
+Aporté además dos síntomas de segundo orden que salen de la misma causa y son arreglables por separado. **La superficie de remediación tiene otro scope que el almacenamiento**: le dijeron que lo borrara en Settings → Copilot → Memory y ahí no había nada para ese repo, porque no está guardado bajo ese repo — si el operador no puede enumerar qué hay en un scope, el scope no es real del lado del operador. Y **la respuesta "deprioritised"**: el agente afirmó una acción de gobierno que no puede ejecutar ni verificar. Que una memoria influya en una sesión futura es propiedad de la capa de recuperación, no de la conversación; un modelo diciendo que no lo hará es una afirmación sobre algo que está fuera de él. Sonó a resolución y cerró la pregunta, y no lo era.
+
+Qué pasó: nada aún.
+
+---
+
+## 41 · anthropics/claude-code #16600
+
+**Link**: https://github.com/anthropics/claude-code/issues/16600
+**Estado**: Open. Hilo largo, once comentarios, vigente en v2.1.37 y con tres issues derivadas (#20880, #23565, #23569).
+
+Qué planteé: la travesía de memoria sube desde el directorio actual hasta `/` y carga todos los `CLAUDE.md` que encuentra, así que en un worktree entra también el del repo padre. El hilo ya tenía consenso sobre la opción 1 —detectar `.git` como archivo y frenar ahí—, así que aporté dos cosas que sobreviven a cualquiera de las tres opciones.
+
+**El warning es correcto, y por eso se ignora.** El mensaje dice que el proyecto importa archivos fuera del directorio de trabajo y que nunca hay que permitirlo en repos de terceros. En un worktree esa afirmación es verdadera, y el primer workaround que lista el issue es ignorarla. O sea que el caso normal de un flujo común entrena a descartar la única señal que existe para el caso anormal, y deja de ser señal justo para el repo de terceros para el que se escribió. Es un argumento a favor de frenar la travesía que no depende del presupuesto de contexto ni de la ergonomía: el límite no está aplicado, y la alerta que hace de sustituto se está gastando en el caso equivocado.
+
+**Y la carga duplicada puede no arreglarse con un límite.** atournayre reporta los mismos 35 archivos cargados dos veces, por ruta absoluta y por ruta relativa. Si es un archivo alcanzable bajo dos formas de ruta, frenar la subida no lo deduplica: llega dos veces desde adentro del límite igual. Lo que sí lo deduplica es la admisión por ruta canónica resuelta, comparada antes de agregar el archivo. Vale confirmar cuál de los dos casos es, porque la #23565 está fileada sobre eso y quedaría tapada por ésta.
+
+Sobre la forma general dejé una observación que no empujé, por ser un cambio mayor al que pide el issue: las tres opciones eligen un lugar mejor donde dejar de caminar, y todos los workarounds del hilo son trucos de layout, porque el scope se deriva de dónde está parado el proceso. La versión que no necesita workaround es un scope declarado — el proyecto dice qué archivos de memoria carga y el cargador no los descubre caminando.
+
+Qué pasó: nada aún.
 
 ---
 ## Limpias / no aplican / no fileadas por baja confianza
@@ -698,3 +722,7 @@ Caso 37 — ollama #14259 — Open — Linutesto midió que avisarle al modelo n
 Caso 38 — mem0 #5439 — Open, **P1** — triage confirmó en código; la compuerta de la PR #6882 no limpia lo ya cruzado
 
 Caso 39 — codex #9505 — Open — **el proyecto declaró preferir inteligencia del modelo; entré igual, declarado**
+
+Caso 40 — copilot-cli #3945 — Open — la memoria filtrada traía una ruta local de otra máquina; el agente afirmó una acción de gobierno que no puede hacer
+
+Caso 41 — claude-code #16600 — Open — el warning es correcto y por eso se ignora; la carga duplicada no la arregla un límite
