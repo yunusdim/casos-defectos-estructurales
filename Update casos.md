@@ -2,7 +2,7 @@
 
 Corte: 2026-09-08. Abre la segunda línea de casos, sobre gobierno determinista de contexto, a partir de RICK Runtime v9. La auditoría en vivo de los 33 casos de la primera línea es del 18-ago. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión.
 
-Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos en la primera línea (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso), más 8 en la segunda: 41 en total. 10 cerrados: 3 con resultado a favor (import-linter #375 completed con la PR #376 mergeada y crédito en docs/authors.md; jscpd #938 implementado y publicado en la release v5.1.0; knip #1949 aceptado y derivado a #1532), 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). Entre los abiertos con intercambio real: SwiftLint #6871 tiene PR de fix abierta por un tercero; dependency-cruiser #1078 con las dos propuestas aceptadas como trabajo futuro; eslint #21223 etiquetado `core` y `feature`, con la implementación en discusión en el equipo; eslint #21226 respondido con repro verificado tras el pedido de caso de uso; stylelint #9438 retitulado por el mantenedor (jeddy3) y aceptado como pedido de función; gitleaks #2239 y bandit #1467 reproducidos de forma independiente por terceros. MSRC: cerrado el 24-ago-2026 como Low severity, sin CVE, fix planificado — detalle completo en el caso 15. El resto, sin respuesta todavía.
+Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos en la primera línea (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso), más 10 en la segunda: 43 en total. 10 cerrados: 3 con resultado a favor (import-linter #375 completed con la PR #376 mergeada y crédito en docs/authors.md; jscpd #938 implementado y publicado en la release v5.1.0; knip #1949 aceptado y derivado a #1532), 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). Entre los abiertos con intercambio real: SwiftLint #6871 tiene PR de fix abierta por un tercero; dependency-cruiser #1078 con las dos propuestas aceptadas como trabajo futuro; eslint #21223 etiquetado `core` y `feature`, con la implementación en discusión en el equipo; eslint #21226 respondido con repro verificado tras el pedido de caso de uso; stylelint #9438 retitulado por el mantenedor (jeddy3) y aceptado como pedido de función; gitleaks #2239 y bandit #1467 reproducidos de forma independiente por terceros. MSRC: cerrado el 24-ago-2026 como Low severity, sin CVE, fix planificado — detalle completo en el caso 15. El resto, sin respuesta todavía.
 
 ---
 
@@ -629,6 +629,26 @@ Sobre la forma general dejé una observación que no empujé, por ser un cambio 
 Qué pasó: nada aún.
 
 ---
+## 42 · continuedev/continue #11671
+
+**Link**: https://github.com/continuedev/continue/issues/11671
+**Estado**: Open. Abierto en mar-2026, nueve comentarios y ningún mantenedor participó nunca. El bot de stale casi lo cierra en jul-2026. Sin PR vinculada.
+
+Qué planteé: el hilo coincide en el diagnóstico y se traba entre dejarlo o refactorizar a fondo. El prompt de sistema se arma concatenando pedazos de varios archivos, sin jerarquía, y con las herramientas desactivadas el modelo igual recibe las reglas de herramientas que no existen. Aporté el paso intermedio que nadie nombró: lo que vuelve el ensamblado no auditable no es que esté repartido, es que el resultado no se puede leer antes de mandarlo. Una función que devuelva el prompt final como lista ordenada de secciones, cada una con nombre, origen, conteo de caracteres y porcentaje del presupuesto, más una vista de la última corrida. Ningún sitio de ensamblado tiene que cambiar para que eso exista. Con esa vista, el hallazgo del autor se ve de un vistazo en cualquier configuración, una sección ausente queda declarada en vez de omitida, y el problema de tamaño pasa de argumento a umbral.
+
+Qué pasó: publicado el 8-sep-2026. Esperando.
+
+---
+## 43 · BerriAI/litellm #36917
+
+**Link**: https://github.com/BerriAI/litellm/issues/36917
+**Estado**: Open. Un comentario previo, de un tercero que se ofreció a tomarlo el 15-ago y no volvió. Sin PR vinculada. Etiquetado bug, proxy, llm translation y claude code.
+
+Qué planteé: un mensaje con rol de sistema puesto dentro del arreglo de mensajes se descarta en la traducción y la llamada devuelve 200 igual. Lo caro es el 200: quien llama no puede separar una instrucción de sistema aplicada de una descartada, así que el defecto solo aparece cuando alguien compara salidas a mano. La forma no es de ese campo: cuando la capa de traducción matchea contra las claves que reconoce, lo que no reconoce cae a nada y la respuesta sigue pareciendo normal, así que ensanchar un extractor cierra la instancia y deja la clase abierta. Propuse un chequeo que no depende del campo: antes de despachar, comparar los elementos presentes en la request entrante contra los que el traductor emitió, y reportar la diferencia. Lo no mapeado es un error o un descarte declarado, y eso no obliga a decidir el mapeo de cada campo.
+
+Qué pasó: publicado el 8-sep-2026. Esperando.
+
+---
 ## Limpias / no aplican / no fileadas por baja confianza
 
 Verificadas y descartadas en el rastrillaje, sin issue abierto:
@@ -726,3 +746,6 @@ Caso 39 — codex #9505 — Open — **el proyecto declaró preferir inteligenci
 Caso 40 — copilot-cli #3945 — Open — la memoria filtrada traía una ruta local de otra máquina; el agente afirmó una acción de gobierno que no puede hacer
 
 Caso 41 — claude-code #16600 — Open — el warning es correcto y por eso se ignora; la carga duplicada no la arregla un límite
+Caso 42 — continue #11671 — Open — nueve comentarios y ningún mantenedor; el ensamblado no se puede leer antes de mandarlo
+
+Caso 43 — litellm #36917 — Open — lo caro es el 200; ensanchar un extractor cierra la instancia y deja la clase abierta
