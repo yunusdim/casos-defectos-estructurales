@@ -45,7 +45,7 @@ El indice del final tiene los 43, caso por caso.
 ## Estado al 9 de septiembre de 2026
 
 43 casos indexados, 33 en la primera linea y 10 en la segunda.
-10 cerrados, 31 abiertos, 28 con respuesta registrada del proyecto.
+11 cerrados, 30 abiertos, 28 con respuesta registrada del proyecto.
 
 El proyecto escribio y publico el cambio:
 
