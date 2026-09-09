@@ -1,8 +1,8 @@
 # Casos — defectos estructurales reportados
 
-Corte: 2026-09-08. Abre la segunda línea de casos, sobre gobierno determinista de contexto, a partir de RICK Runtime v9. La auditoría en vivo de los 33 casos de la primera línea es del 18-ago. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión.
+Corte: 2026-09-09. Abre la segunda línea de casos, sobre gobierno determinista de contexto, a partir de RICK Runtime v9. La auditoría en vivo de los 33 casos de la primera línea es del 18-ago. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión.
 
-Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos en la primera línea (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso), más 10 en la segunda: 43 en total. 10 cerrados: 3 con resultado a favor (import-linter #375 completed con la PR #376 mergeada y crédito en docs/authors.md; jscpd #938 implementado y publicado en la release v5.1.0; knip #1949 aceptado y derivado a #1532), 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). Entre los abiertos con intercambio real: SwiftLint #6871 tiene PR de fix abierta por un tercero; dependency-cruiser #1078 con las dos propuestas aceptadas como trabajo futuro; eslint #21223 etiquetado `core` y `feature`, con la implementación en discusión en el equipo; eslint #21226 respondido con repro verificado tras el pedido de caso de uso; stylelint #9438 retitulado por el mantenedor (jeddy3) y aceptado como pedido de función; gitleaks #2239 y bandit #1467 reproducidos de forma independiente por terceros. MSRC: cerrado el 24-ago-2026 como Low severity, sin CVE, fix planificado — detalle completo en el caso 15. El resto, sin respuesta todavía.
+Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos en la primera línea (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso), más 10 en la segunda: 43 en total. 11 cerrados: 4 con resultado a favor (import-linter #375 completed con la PR #376 mergeada y crédito en docs/authors.md; jscpd #938 implementado y publicado en la release v5.1.0; knip #1949 aceptado y derivado a #1532, que al 9-sep sigue abierto; gemini-cli #28859 completed con la PR #29252 del mantenedor mergeada el 8-sep), 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). Entre los abiertos con intercambio real: SwiftLint #6871 tiene PR de fix abierta por un tercero; dependency-cruiser #1078 con las dos propuestas aceptadas como trabajo futuro; eslint #21223 etiquetado `core` y `feature`, con la implementación en discusión en el equipo; eslint #21226 respondido con repro verificado tras el pedido de caso de uso; stylelint #9438 retitulado por el mantenedor (jeddy3) y aceptado como pedido de función; gitleaks #2239 y bandit #1467 reproducidos de forma independiente por terceros. MSRC: cerrado el 24-ago-2026 como Low severity, sin CVE, fix planificado — detalle completo en el caso 15. El resto, sin respuesta todavía.
 
 ---
 
@@ -534,13 +534,13 @@ Qué pasó: nada aún.
 ## 35 · google-gemini/gemini-cli #28859
 
 **Link**: https://github.com/google-gemini/gemini-cli/issues/28859
-**Estado**: Open, `priority/p1`. Tres reproducciones independientes de terceros.
+**Estado**: **Closed (completed)**, `priority/p1`. Tres reproducciones independientes de terceros. 14 reacciones +1.
 
 Qué planteé: llegué al hilo cuando ya tenía repros de Gerry9000 y harrisonaedwards en 0.58.0 —uno con auth de API key, o sea que no es específico de Vertex— y una PR de sylvesterkaczmarek, la #28893, **cerrada por el bot de política porque el issue no tiene label `help wanted`, no por mérito técnico**. Así que no agregué otro repro.
 
 Lo que aporté: que el fix estrecho y el borrado de nombres del nightly son los dos por-incidente, y que lo que sobrevive a la próxima rotación de alias es una comparación permanente entre pedido y servido, chequeada antes de contar el resultado — barata, porque el id servido ya está a mano: es con lo que los tres confirmaron el bug. Y que para el impacto que el propio issue declara —benchmarking y atribución de costo, las dos mediciones— **avisar no alcanza**: un warning en stderr dentro de una corrida por lotes se absorbe, el número se produce igual y se atribuye igual al modelo pedido. Si el motor servido no es el pedido, toda medición de conducta bajo esa llamada es inválida, y la conducta que corresponde es rechazar la llamada, no etiquetarla — con una salida que sea un acto deliberado y no un flag que se pone una vez y se olvida.
 
-Qué pasó: nada aún.
+Qué pasó: el 8-sep, veintiuna horas después del comentario, SandyTao520 abrió la PR #29252, `fix(core): preserve explicit versioned Flash model IDs`, la mergeó a las 22:54:39Z y cerró el issue como completado dos segundos después. Tres archivos, +54/-6: cinco líneas en `packages/core/src/config/models.ts` y cuarenta y nueve de test. Entró la mitad estrecha, la que preserva los ids explícitos. Verificado contra el parche: no hay `throw`, ni `warn`, ni `console`, ni `exit`, ni reconocimiento del operador. Corrigieron el nombre. No pusieron la compuerta.
 
 ---
 
@@ -713,7 +713,7 @@ Caso 23 — gitleaks #2239 — Open — **reproducido contra master por un terce
 
 Caso 24 — vulture #430 — Open — sin historia
 
-Caso 25 — knip #1949 — **Closed** — aceptado por el mantenedor y derivado a `#1532`, que lo arregla de raíz
+Caso 25 — knip #1949 — **Closed** — aceptado por el mantenedor y derivado a `#1532`, que al 9-sep sigue abierto
 
 Caso 26 — deptry #1654 — **Closed (not planned)** — "AI slop", respondí con tono neutro, sin reapertura
 
@@ -733,7 +733,7 @@ Caso 33 — dependency-check #8751 — **Closed (not planned)** — cerrado sin 
 
 Caso 34 — transformers #29279 — Open — abierto desde feb-2024 sin un solo comentario; repro autocontenido en 5.16.1
 
-Caso 35 — gemini-cli #28859 — Open, p1 — tres repros de terceros; la PR #28893 la cerró el bot de política, no el mérito
+Caso 35 — gemini-cli #28859 — **Closed (completed)** — la PR #29252 del mantenedor, mergeada el 8-sep; entra el fix estrecho, no la comparación permanente
 
 Caso 36 — python-genai #2271 — Open, p2 — la otra mitad del 35 una capa abajo; un p2 bloqueando un p1
 
