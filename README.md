@@ -74,6 +74,53 @@ Aceptado y todavia sin construir:
 
 Los cierres sin cambio tambien estan, con el motivo.
 
+## Movimientos al 16 de septiembre de 2026
+
+Desde el censo del 9 de septiembre, verificado en vivo contra cada hilo. El
+censo agregado de arriba (43 indexados, 33 y 10) sigue siendo el ultimo
+recuento completo; lo de aca son los cambios de estado sobre esos casos, mas
+la circulacion de segunda linea al final.
+
+El proyecto escribio y publico el cambio:
+
+- sverweij/dependency-cruiser #1078. El owner publico la v18.3.0 con las tres
+  piezas: conteo de delta al actualizar la baseline (total, nuevas, existentes,
+  removidas), un modo shrink-only que no admite violaciones nuevas, y el flag
+  --baseline-shrink-only. PRs #1079, #1085 y #1088.
+
+Aceptado y en el catalogo:
+
+- github/spec-kit #4106. El preset closed-vocabulary quedo mergeado en el
+  catalogo de la comunidad (PR #4201). Ademas hay un PR de un tercero, #4160,
+  que lleva el mismo chequeo al analyze del core.
+
+Un tercero escribio el fix, en revision:
+
+- realm/SwiftLint #6871. LizunovSergey escribio el PR #6872 con el enfoque de
+  ancla; espera aprobacion del mantenedor.
+
+El mantenedor abrio el fix, en progreso:
+
+- huggingface/transformers #29279. Rocketknight1 abrio el PR #47386 de
+  sanitizacion del input de chat. La discusion converge en tokenizar el
+  contenido no confiable aparte, para que no pueda producir los ids
+  estructurales del modelo.
+
+Cerrado con respuesta de fondo:
+
+- phpstan/phpstan #15078. El mantenedor confirmo que la granularidad actual es
+  un compromiso deliberado y derivo a sarb para el seguimiento por linea.
+
+Segunda linea, en circulacion:
+
+- El paper Engine Provenance llevo el caso de sustitucion silenciosa de modelo
+  a mas runtimes: bifrost #6742, oh-my-pi #10294, goose #11041,
+  claude-code-router #1787 y claude-code #81562. El campo de procedencia
+  faltante quedo abierto como issue propio en simonw/llm #1681. Cada hilo se
+  reduce a lo mismo: un motor respondio y el runtime atribuyo el turno al modelo
+  pedido, no al que corrio. Estas son intervenciones sobre hilos de terceros
+  mas el issue propio en simonw/llm, no casos nuevos del indice.
+
 ## Trabajo relacionado
 
 Closure Trivialization in Typed Separation Systems
@@ -81,6 +128,10 @@ https://doi.org/10.5281/zenodo.21908527
 
 Rick App: Fail-Closed Context Governance in the Browser
 https://doi.org/10.5281/zenodo.22654842
+
+Engine Provenance: Deterministic admission control over silent model
+substitution in LLM runtimes
+https://doi.org/10.5281/zenodo.22722523
 
 Diego Gabriel Impieri
 https://orcid.org/0009-0003-9082-650X
