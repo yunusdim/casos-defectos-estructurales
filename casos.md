@@ -1,6 +1,6 @@
 # Casos — defectos estructurales reportados
 
-Corte: 2026-09-09. Abre la segunda línea de casos, sobre gobierno determinista de contexto, a partir de RICK Runtime v9. La auditoría en vivo de los 33 casos de la primera línea es del 18-ago. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión.
+Corte: 2026-09-09. Abre la segunda línea de casos, sobre gobierno determinista de contexto, a partir de RICK Runtime v9. La auditoría en vivo de los 33 casos de la primera línea es del 18-ago. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión. Movimientos verificados al 16-sep-2026 registrados en cada caso afectado y en la sección de circulación de Engine Provenance al final; el censo agregado sigue siendo el del 9-sep.
 
 Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos en la primera línea (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso), más 10 en la segunda: 43 en total. 11 cerrados: 4 con resultado a favor (import-linter #375 completed con la PR #376 mergeada y crédito en docs/authors.md; jscpd #938 implementado y publicado en la release v5.1.0; knip #1949 aceptado y derivado a #1532, que al 9-sep sigue abierto; gemini-cli #28859 completed con la PR #29252 del mantenedor mergeada el 8-sep), 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). Entre los abiertos con intercambio real: SwiftLint #6871 tiene PR de fix abierta por un tercero; dependency-cruiser #1078 con las dos propuestas aceptadas como trabajo futuro; eslint #21223 etiquetado `core` y `feature`, con la implementación en discusión en el equipo; eslint #21226 respondido con repro verificado tras el pedido de caso de uso; stylelint #9438 retitulado por el mantenedor (jeddy3) y aceptado como pedido de función; gitleaks #2239 y bandit #1467 reproducidos de forma independiente por terceros. MSRC: cerrado el 24-ago-2026 como Low severity, sin CVE, fix planificado — detalle completo en el caso 15. El resto, sin respuesta todavía.
 
@@ -20,11 +20,17 @@ Qué pasó: nada aún.
 ## 2 · sverweij/dependency-cruiser #1078
 
 **Link**: https://github.com/sverweij/dependency-cruiser/issues/1078
-**Estado**: Open. Sin historia — 0 comentarios.
+**Estado**: Open. **El owner shippeó las dos propuestas en la v18.3.0 (16-sep).**
 
 Qué planteé: el known-violations file hace bien la granularidad (por instancia, no por regla), y ya imprime el count en cada corrida verde — mejor que la mayoría. Pero el count es nivel, no cambio: `⚠ 20 known violations ignored` es igual si el store creció de 12 a 20 o bajó de 28 a 20. Pedí delta contra el archivo en disco, y/o modo shrink-only para `depcruise-baseline`.
 
-Qué pasó: nada aún.
+Qué pasó — verificado en vivo el 16-sep-2026:
+
+— **sverweij** (owner) publicó la **v18.3.0** con las dos propuestas y una tercera pieza: conteo de delta al actualizar la baseline (total, nuevas, existentes, removidas), un modo shrink-only que no admite violaciones nuevas, y el flag `--baseline-shrink-only`. PRs #1079 (delta), #1085 (prune/shrink-only) y #1088 (flag CLI). Me etiquetó al anunciar la release.
+
+— Respondí agradeciendo y pidiendo que confirme un solo punto de diseño: que la clave de comparación excluya la severidad. Un retune warn a error es la misma violación para el ratchet y no debe resurgir el set entero como nuevo; un cambio de from/to bajo la misma regla sí es otra. Pendiente su confirmación de la clave.
+
+Resultado del caso: las dos propuestas planteadas, escritas y publicadas por el owner en una release.
 
 ---
 
@@ -93,7 +99,7 @@ Qué pasó — con historia real:
 ## 6 · github/spec-kit #4106 — el caso con más interacción
 
 **Link**: https://github.com/github/spec-kit/issues/4106
-**Estado**: Open. Colaboración activa. Preset publicado y submiteado al catálogo. Hay además una PR de un tercero sobre este issue, con cambios pedidos por el mantenedor.
+**Estado**: Open. **Preset mergeado al catálogo de la comunidad (16-sep). PR de un tercero (#4160) llevándolo al core, con cambios pedidos por el mantenedor.**
 
 Qué planteé: `/speckit.analyze` no detecta cuando un vocabulario cerrado (un set de valores admisibles) se enumera distinto en distintas partes de una spec — ni la verificación estructural ni el oráculo de trayectorias lo cubren. Con un caso medido propio: un sistema de 40 módulos generado por contrato, 4 defectos sobrevivieron verificación completa, los 4 eran la misma clase de error (transcripción de una definición), uno de ellos exactamente este.
 
@@ -131,6 +137,8 @@ Qué pasó — historia sustancial:
 — **Issue de submission `github/spec-kit#4192`, 18-ago-2026**: mnriem pidió abrirlo para que corran los workflows automáticos del catálogo — la validación se dispara sobre el issue, no sobre el PR. Creado con la plantilla oficial. Label `enhancement`, sin `preset-submission` todavía.
 
 — Issue sigue abierto. Último comentario de mnriem: *"Nice progress!"*. Pendiente, y todo de terceros: aprobación de los workflows del PR #4179 y cierre de CodeQL, más el label `preset-submission` sobre #4192 en triage.
+
+— **16-sep-2026**: el preset quedó **mergeado en el catálogo de la comunidad** (PR #4201, cerrado por mnriem con *"Thank you!"*), y el issue de submission #4192 quedó cerrado como completado. Volví a este issue con el link del preset publicado, y dejé en la PR de core #4160 las dos advertencias de haber construido el instrumento: reportar coverage en cada corrida (declarations inspected vs recognised, para que un cero no se lea como limpio) y fijar la unidad de `declarations inspected`, hoy indefinida, para que dos agentes sobre la misma spec no reporten coberturas distintas. #4160 sigue abierta con cambios pedidos por mnriem.
 
 ---
 
@@ -220,6 +228,8 @@ Qué pasó — historia real, la más fuerte de los casos:
 — Abrió **PR #6872** ("Fix baseline duplicate replacements") con el fix, y está pidiendo confirmación de un mantenedor sobre la precedencia correcta antes de avanzar con la implementación.
 
 — Le respondí en la PR el 17-ago-2026: validé el mecanismo de ancla —una violación duplicada sin cambios es la evidencia de que el grupo no se desplazó, que es justo la distinción que el fallback viejo no podía hacer— y declaré el residuo real: si todas las duplicadas de un grupo se reemplazan en la misma corrida, no sobrevive ancla, el grupo cae al camino tolerante al desplazamiento y el swap sigue invisible. Es más angosto que lo reportado en el issue y está acotado por lo genérico que sean reason y texto de línea.
+
+— **16-sep-2026**: LizunovSergey coincidió con el residuo (el grupo que se da vuelta entero no deja ancla y necesita una clave más fuerte que reason + texto de línea, un cambio distinto de este PR). Le respondí confirmando que la línea que trazó es la correcta y que ese residuo va a su propio issue, no montado en este PR. La PR #6872 sigue abierta esperando aprobación del mantenedor.
 
 — Pendiente: que un mantenedor apruebe los workflows pendientes y decida sobre la precedencia.
 
@@ -521,13 +531,15 @@ Criterio de selección, declarado: entro donde el proyecto ya va en esa direcci�
 ## 34 · huggingface/transformers #29279
 
 **Link**: https://github.com/huggingface/transformers/issues/29279
-**Estado**: Open. Abierto desde feb-2024, sin un solo comentario hasta el mío.
+**Estado**: Open. **El mantenedor abrió el fix (PR #47386, 16-sep); la discusión converge en la regla del caso.**
 
 Qué planteé: `apply_chat_template` renderiza el contenido de los mensajes tal cual, así que un `<|im_start|>system` dentro del contenido de usuario se convierte en un límite de rol real. Repro autocontenido —sin descargar modelo, sin red, sin torch— verificado en transformers 5.16.1: dos mensajes entran, cuatro límites de rol salen, y los forjados resuelven al mismo control id que los que emitió la plantilla, porque los matchea el matcher de added tokens al tokenizar. Verifiqué también que no existe `escape_content` ni sanitización alguna en esa ruta; lo único que hay es `add_special_tokens=False`, que evita un BOS duplicado y no toca los marcadores que llegan dentro del contenido.
 
 De las tres opciones del post original descarté la documentación —convierte una propiedad estructural en una convención que cada autor de plantilla tiene que redescubrir— y la estandarización del formato de mensajes, cambio mayor al defecto. Queda el filtro, con un ajuste: opt-in deja el default inseguro, y el default es lo que viaja en miles de plantillas. La regla que lo cierra va en el ensamblado y no en la plantilla: **solo la plantilla puede emitir los marcadores que delimitan roles; el contenido que llega de afuera no puede.** No es detección de inyección — nada tiene que reconocerse como malicioso, y no hay falsos positivos sobre texto benigno.
 
-Qué pasó: nada aún.
+Qué pasó — verificado en vivo el 16-sep-2026:
+
+— **Rocketknight1** (Member, a cargo de los chat templates) respondió apuntando al fix abierto, **PR #47386** ("Add chat input sanitization"). La discusión evolucionó del borrado simple de tokens especiales hacia el eje de este caso: bbrowning, samuelstevens y ArthurZucker convergen en tokenizar el contenido no confiable aparte, para que no pueda producir los ids estructurales del modelo, y en desacoplar la estructura de la plantilla del contenido. ArthurZucker pidió cambios; hay una PR competidora, #48052, token-level. La regla que planteé (solo la plantilla emite los marcadores de rol) está representada en el hilo por varias manos; no volví a comentar para no meter ruido.
 
 ---
 
@@ -566,7 +578,7 @@ Qué planteé: el hilo ya tenía la mejor evidencia ajena del lote. Linutesto ma
 
 Lo que aporté: ordenar las tres opciones por a quién va dirigido el aviso. Al modelo — medido, no funciona. Al log del servidor — es lo que propone el issue, mejor, pero un log tampoco es el llamador: en un deploy containerizado nadie lo lee y un cliente de API no puede ramificar sobre eso. Al campo de respuesta — el único sobre el que el llamador puede actuar. Y el fondo: **la ausencia se declara como dato al llamador, y nunca se le entrega al modelo para que la resuelva.** Si el truncado es fatal, warning o aceptable lo decide el llamador; un agente que pierde su system prompt y sus tools por el frente no es lo mismo que un chat que pierde el turno tres. Cuestioné el label `documentation` con esa razón: la medición de Linutesto muestra que no es un hueco de documentación.
 
-Qué pasó: nada aún.
+Qué pasó — verificado en vivo el 16-sep-2026: **YauhenBichel** sumó mediciones propias en 0.34.0 (un prompt de ~120k tokens cortado a 32770 con respuesta 200 y sin señal; con gpt-oss:20b la respuesta vuelve vacía), alineadas con el punto de que el aviso tiene que ir al llamador y no solo al log del servidor. Abrió una propuesta hermana, #18399. Sin respuesta de mantenedores todavía.
 
 ---
 
@@ -636,7 +648,7 @@ Qué pasó: nada aún.
 
 Qué planteé: el hilo coincide en el diagnóstico y se traba entre dejarlo o refactorizar a fondo. El prompt de sistema se arma concatenando pedazos de varios archivos, sin jerarquía, y con las herramientas desactivadas el modelo igual recibe las reglas de herramientas que no existen. Aporté el paso intermedio que nadie nombró: lo que vuelve el ensamblado no auditable no es que esté repartido, es que el resultado no se puede leer antes de mandarlo. Una función que devuelva el prompt final como lista ordenada de secciones, cada una con nombre, origen, conteo de caracteres y porcentaje del presupuesto, más una vista de la última corrida. Ningún sitio de ensamblado tiene que cambiar para que eso exista. Con esa vista, el hallazgo del autor se ve de un vistazo en cualquier configuración, una sección ausente queda declarada en vez de omitida, y el problema de tamaño pasa de argumento a umbral.
 
-Qué pasó: publicado el 8-sep-2026. Esperando.
+Qué pasó — verificado en vivo el 16-sep-2026: **shanevcantwell** (autor) me invitó a operacionalizarlo y **chernistry** lo endosó, pidiendo además metadata por sección (qué ruta de código la escribió). Respondí con la firma concreta de la función: prompt final como lista ordenada de secciones con nombre, origen, conteo de caracteres, share del presupuesto y `present` explícito. Ningún mantenedor de Continue participó todavía; entré porque el autor invitó y el eje es el mío, declarado.
 
 ---
 ## 43 · BerriAI/litellm #36917
@@ -649,6 +661,24 @@ Qué planteé: un mensaje con rol de sistema puesto dentro del arreglo de mensaj
 Qué pasó: publicado el 8-sep-2026. Esperando.
 
 ---
+## Circulación Engine Provenance — 16-sep-2026
+
+El paper Engine Provenance (10.5281/zenodo.22722524) llevó el caso de sustitución silenciosa de modelo a más runtimes. Son intervenciones sobre hilos de terceros más un issue propio, no casos nuevos del índice de 43; se registran acá para no perder la traza. Verificado en vivo el 16-sep.
+
+— **anthropics/claude-code #81562** — Open. Sustitución silenciosa (pidieron Fable 5, contestó Sonnet 5). Aporté: certificar lo que respondió y no lo seleccionado, familia vs identificador, motor innombrable = violación. bcherny (mantenedor) etiquetó `area:agents`. Sin respuesta directa.
+
+— **maximhq/bifrost #6742** — Open. Sustitución silenciosa de DeepSeek en el endpoint Anthropic. Aporté los dos ejes que no hay que colapsar: identidad (served vs requested, familia vs identificador) y completitud de declaración (usage colapsado, campo ausente distinguible de cero). Sin respuesta aún.
+
+— **can1357/oh-my-pi #10294** — Open. Atribución de modelo por turno en la TUI. roboomp (colaborador) aceptó mis dos puntos (familia vs identificador; render "unknown" en replay, no el modelo actual) y los sumó a las decisiones abiertas; declinó depender del DOI, con la razón de trabajar contra los hechos de identidad del propio repo.
+
+— **aaif-goose/goose #11041** — Open, "Ready". La disclosure ignora requested cuando falta resolved. jbg (colaborador) lo aceptó, TheSeydiCharyyev se ofreció a implementarlo de punta a punta. Mi punto (marcar el fallback como no confirmado, distinto del resuelto) quedó registrado.
+
+— **musistudio/claude-code-router #1787** — Closed. Cost en $0 por registrar el alias, no el modelo ruteado. Mergearon el fix de costo (PR #1790); mi punto de fondo (persistir el modelo servido como columna propia) no lo recogieron, pero el hilo quedó cerrado.
+
+— **simonw/llm #1681** — Open (issue propio). El plugin OpenAI por default no puebla `resolved_model` desde el campo `.model` de la respuesta. adity982 abrió la PR #1682 que lo cierra.
+
+---
+
 ## Limpias / no aplican / no fileadas por baja confianza
 
 Verificadas y descartadas en el rastrillaje, sin issue abierto:
@@ -665,7 +695,7 @@ Metodología del rastrillaje: búsquedas en paralelo por categoría, código fue
 
 Caso 1 — ArchUnit #1700 — Open — sin historia
 
-Caso 2 — dependency-cruiser #1078 — Open — sin historia
+Caso 2 — dependency-cruiser #1078 — Open — **el owner shippeó las dos propuestas en la v18.3.0 (16-sep); pendiente confirmar la clave de comparación**
 
 Caso 3 — import-linter #375 — **Closed (completed)** — PR #376 mergeada el 24-ago; la feature entra al proyecto
 
@@ -673,7 +703,7 @@ Caso 4 — openrewrite/rewrite #8498 — Open — sin historia
 
 Caso 5 — Hypothesis #4854 — **Closed** — cerrado por política AI, respondí, sin reapertura
 
-Caso 6 — spec-kit #4106 — Open — **respondido; preset publicado, hoy en `v1.0.1`; catálogo submiteado (PR #4179) e issue de submission (#4192); PR de un tercero (#4160) con cambios pedidos; afirmación corregida el 18-ago**
+Caso 6 — spec-kit #4106 — Open — **preset mergeado al catálogo de la comunidad (PR #4201) el 16-sep, #4192 cerrado; dejé las dos advertencias (coverage, unidad) en la PR de core #4160, que sigue abierta con cambios pedidos**
 
 Caso 7 — eslint #21223 — Open — labels `core` y `feature`; **un colaborador se ofrece a implementarlo, decisión pendiente mía**
 
@@ -683,7 +713,7 @@ Caso 9 — rubocop #15570 — Open — sin historia
 
 Caso 10 — eslint #21226 — Open — **el mantenedor pidió caso de uso concreto el 30-ago; respondido el 1-sep con repro en v10.9.1 y pedido acotado**
 
-Caso 11 — SwiftLint #6871 — Open — **confirmado + PR de fix (#6872) por un colaborador; le respondí en la PR con el residuo del grupo completo**
+Caso 11 — SwiftLint #6871 — Open — **confirmado + PR de fix (#6872) por un colaborador; le respondí en la PR con el residuo del grupo completo; reconfirmado 16-sep, PR esperando al mantenedor**
 
 Caso 12 — golangci-lint #6714 — **Closed (declined)** — declined, respondí, sin reapertura
 
@@ -731,13 +761,13 @@ Caso 32 — maven-pmd-plugin #724 — Open — sin historia (code-only)
 
 Caso 33 — dependency-check #8751 — **Closed (not planned)** — cerrado sin comentario (code-only)
 
-Caso 34 — transformers #29279 — Open — abierto desde feb-2024 sin un solo comentario; repro autocontenido en 5.16.1
+Caso 34 — transformers #29279 — Open — **el mantenedor abrió el fix (PR #47386) el 16-sep; la discusión converge en la regla del caso**
 
 Caso 35 — gemini-cli #28859 — **Closed (completed)** — la PR #29252 del mantenedor, mergeada el 8-sep; entra el fix estrecho, no la comparación permanente
 
 Caso 36 — python-genai #2271 — Open, p2 — la otra mitad del 35 una capa abajo; un p2 bloqueando un p1
 
-Caso 37 — ollama #14259 — Open — Linutesto midió que avisarle al modelo no alcanza: confabuló 3 de 3
+Caso 37 — ollama #14259 — Open — Linutesto midió que avisarle al modelo no alcanza: confabuló 3 de 3; **YauhenBichel sumó mediciones (16-sep)**
 
 Caso 38 — mem0 #5439 — Open, **P1** — triage confirmó en código; la compuerta de la PR #6882 no limpia lo ya cruzado
 
@@ -746,6 +776,6 @@ Caso 39 — codex #9505 — Open — **el proyecto declaró preferir inteligenci
 Caso 40 — copilot-cli #3945 — Open — la memoria filtrada traía una ruta local de otra máquina; el agente afirmó una acción de gobierno que no puede hacer
 
 Caso 41 — claude-code #16600 — Open — el warning es correcto y por eso se ignora; la carga duplicada no la arregla un límite
-Caso 42 — continue #11671 — Open — nueve comentarios y ningún mantenedor; el ensamblado no se puede leer antes de mandarlo
+Caso 42 — continue #11671 — Open — nueve comentarios y ningún mantenedor; el ensamblado no se puede leer antes de mandarlo; **invitado a operacionalizar, respondí con la firma de la función (16-sep)**
 
 Caso 43 — litellm #36917 — Open — lo caro es el 200; ensanchar un extractor cierra la instancia y deja la clase abierta
