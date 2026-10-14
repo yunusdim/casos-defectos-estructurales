@@ -1,6 +1,6 @@
 # Casos — defectos estructurales reportados
 
-Corte: 2026-09-09. Abre la segunda línea de casos, sobre gobierno determinista de contexto, a partir de RICK Runtime v9. La auditoría en vivo de los 33 casos de la primera línea es del 18-ago. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión. Movimientos verificados al 16-sep-2026 registrados en cada caso afectado y en la sección de circulación de Engine Provenance al final; el censo agregado sigue siendo el del 9-sep.
+Corte: 2026-09-09. Abre la segunda línea de casos, sobre gobierno determinista de contexto, a partir de RICK Runtime v9. La auditoría en vivo de los 33 casos de la primera línea es del 18-ago. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión. Movimientos verificados al 16-sep-2026 registrados en cada caso afectado y en la sección de circulación de Engine Provenance al final. El 14-oct-2026 se agregó el caso 44 (primera línea, ruff #1149): el índice pasa a 44, el censo agregado sigue siendo el del 9-sep (33 en primera línea, 10 en segunda, 43 indexados a esa fecha).
 
 Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos en la primera línea (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso), más 10 en la segunda: 43 en total. 11 cerrados: 4 con resultado a favor (import-linter #375 completed con la PR #376 mergeada y crédito en docs/authors.md; jscpd #938 implementado y publicado en la release v5.1.0; knip #1949 aceptado y derivado a #1532, que al 9-sep sigue abierto; gemini-cli #28859 completed con la PR #29252 del mantenedor mergeada el 8-sep), 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). Entre los abiertos con intercambio real: SwiftLint #6871 tiene PR de fix abierta por un tercero; dependency-cruiser #1078 con las dos propuestas aceptadas como trabajo futuro; eslint #21223 etiquetado `core` y `feature`, con la implementación en discusión en el equipo; eslint #21226 respondido con repro verificado tras el pedido de caso de uso; stylelint #9438 retitulado por el mantenedor (jeddy3) y aceptado como pedido de función; gitleaks #2239 y bandit #1467 reproducidos de forma independiente por terceros. MSRC: cerrado el 24-ago-2026 como Low severity, sin CVE, fix planificado — detalle completo en el caso 15. El resto, sin respuesta todavía.
 
@@ -661,6 +661,16 @@ Qué planteé: un mensaje con rol de sistema puesto dentro del arreglo de mensaj
 Qué pasó: publicado el 8-sep-2026. Esperando.
 
 ---
+## 44 · astral-sh/ruff #1149
+
+**Link**: https://github.com/astral-sh/ruff/issues/1149
+**Estado**: Open. Primera línea. **Comenté el 14-oct-2026.** 40+ comentarios, labels `core` y `suppression`.
+
+Qué planteé: el hilo discute cómo implementar el baseline para adoptar Ruff de forma incremental. Hay dos diseños sobre la mesa. El modelo elm-review/ESLint cuenta problemas por archivo y por regla; el swap del mismo conteo ya está señalado en el hilo (xmo-odoo, Avasam), así que no lo repetí. El modelo golangci-lint `new-from-rev` filtra por git diff, y MichaReiser (Member) se inclina por ahí. Mi punto, que no estaba dicho: la elección no es por comodidad, es qué certifica el gate. El conteo certifica "el número no subió". El git-diff certifica "nada nuevo en las líneas que tocaste", por eso tocar una línea la reporta como nueva y no ve una violación suprimida reescrita en una línea que nadie editó. Ninguno certifica "estos problemas puntuales son los que quedan grandfathered"; para eso el baseline tiene que ir atado al contenido de cada violación, no a su conteo ni a su línea. Cité Closure Trivialization (10.5281/zenodo.21908527).
+
+Qué pasó: posteado, esperando respuesta. Primer caso nuevo de primera línea desde el censo del 9-sep.
+
+---
 ## Circulación Engine Provenance — 16-sep-2026
 
 El paper Engine Provenance (10.5281/zenodo.22722524) llevó el caso de sustitución silenciosa de modelo a más runtimes. Son intervenciones sobre hilos de terceros más un issue propio, no casos nuevos del índice de 43; se registran acá para no perder la traza. Verificado en vivo el 16-sep.
@@ -779,3 +789,5 @@ Caso 41 — claude-code #16600 — Open — el warning es correcto y por eso se 
 Caso 42 — continue #11671 — Open — nueve comentarios y ningún mantenedor; el ensamblado no se puede leer antes de mandarlo; **invitado a operacionalizar, respondí con la firma de la función (16-sep)**
 
 Caso 43 — litellm #36917 — Open — lo caro es el 200; ensanchar un extractor cierra la instancia y deja la clase abierta
+
+Caso 44 — ruff #1149 — Open — **primera línea; comenté el 14-oct encuadrando count vs git-diff vs identidad; cité Closure Trivialization; esperando respuesta**

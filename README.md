@@ -1,15 +1,15 @@
 # Casos de defectos estructurales
 
 Registro publico de defectos estructurales reportados en herramientas y
-runtimes de codigo abierto. 43 casos, cada uno con su issue en el upstream,
+runtimes de codigo abierto. 44 casos, cada uno con su issue en el upstream,
 su reproduccion y su estado.
 
-No es una lista de bugs. Es el mismo defecto encontrado 43 veces en 43
+No es una lista de bugs. Es el mismo defecto encontrado 44 veces en 44
 proyectos distintos, en dos formas.
 
 ## Primera linea: contar en vez de identificar
 
-Casos 1 a 33. Linters, baselines de type-checking, detectores de codigo
+Casos 1 a 33 y 44. Linters, baselines de type-checking, detectores de codigo
 duplicado, scanners de secretos, gates de vulnerabilidades de dependencias.
 
 El mecanismo de baseline, supresion o exclusion trackea un agregado por
@@ -120,6 +120,21 @@ Segunda linea, en circulacion:
   reduce a lo mismo: un motor respondio y el runtime atribuyo el turno al modelo
   pedido, no al que corrio. Estas son intervenciones sobre hilos de terceros
   mas el issue propio en simonw/llm, no casos nuevos del indice.
+
+## Movimientos al 14 de octubre de 2026
+
+Primera veta nueva de primera linea desde el censo del 9 de septiembre. El
+indice pasa a 44; el censo agregado sigue siendo el del 9-sep.
+
+- astral-sh/ruff #1149. El hilo de baseline para adopcion incremental
+(abierto desde 2022, 40+ comentarios, labels core y suppression) esta
+decidiendo entre un baseline por conteo al estilo elm-review/ESLint y el
+git-diff new-from-rev de golangci-lint. Comente encuadrando la eleccion por
+lo que certifica cada gate: el conteo certifica que el numero no subio, el
+git-diff que no hay nada nuevo en las lineas tocadas, y ninguno certifica
+que los problemas grandfathered sigan siendo los mismos. Para eso el baseline
+tiene que ir atado al contenido de cada violacion. Cite Closure
+Trivialization. Posteado, esperando respuesta.
 
 ## Trabajo relacionado
 
