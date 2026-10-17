@@ -40,7 +40,7 @@ Reproduccion, declarada como en vivo o solo por lectura de codigo. El issue
 filed en el upstream, con link. El estado y la historia: que respondio el
 proyecto, que se corrigio, que se rechazo y por que.
 
-El indice del final tiene los 43, caso por caso.
+El indice del final tiene los 44, caso por caso.
 
 ## Estado al 9 de septiembre de 2026
 
