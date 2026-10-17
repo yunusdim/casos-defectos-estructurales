@@ -136,6 +136,17 @@ que los problemas grandfathered sigan siendo los mismos. Para eso el baseline
 tiene que ir atado al contenido de cada violacion. Cite Closure
 Trivialization. Posteado, esperando respuesta.
 
+## Movimientos al 17 de octubre de 2026
+
+Segunda linea, en circulacion:
+
+- aaif-goose/goose #11041. El punto que deje (que el fallback al modelo
+pedido no debe leerse como confirmacion de cual sirvio) quedo como requisito
+del mantenedor y en el codigo. La PR #12914, que cierra el issue, muestra el
+nombre no confirmado como "gpt-4o (requested)" y agrega un test que verifica
+que un modelo resuelto se rinde sin esa etiqueta y uno no reportado con ella.
+Estado Verification.
+
 ## Trabajo relacionado
 
 Closure Trivialization in Typed Separation Systems
