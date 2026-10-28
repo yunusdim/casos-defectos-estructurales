@@ -1,6 +1,6 @@
 # Casos — defectos estructurales reportados
 
-Corte: 2026-09-09. Abre la segunda línea de casos, sobre gobierno determinista de contexto, a partir de RICK Runtime v9. La auditoría en vivo de los 33 casos de la primera línea es del 18-ago. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión. Movimientos verificados al 16-sep-2026 registrados en cada caso afectado y en la sección de circulación de Engine Provenance al final. El 14-oct-2026 se agregó el caso 44 (primera línea, ruff #1149): el índice pasa a 44, el censo agregado sigue siendo el del 9-sep (33 en primera línea, 10 en segunda, 43 indexados a esa fecha). El 17-oct-2026 se actualizó la circulación de goose #11041: el punto que dejé quedó en el código (PR #12914) y candado con test.
+Corte: 2026-09-09. Abre la segunda línea de casos, sobre gobierno determinista de contexto, a partir de RICK Runtime v9. La auditoría en vivo de los 33 casos de la primera línea es del 18-ago. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión. Movimientos verificados al 16-sep-2026 registrados en cada caso afectado y en la sección de circulación de Engine Provenance al final. El 14-oct-2026 se agregó el caso 44 (primera línea, ruff #1149): el índice pasa a 44, el censo agregado sigue siendo el del 9-sep (33 en primera línea, 10 en segunda, 43 indexados a esa fecha). El 17-oct-2026 se actualizó la circulación de goose #11041: el punto que dejé quedó en el código (PR #12914) y candado con test. El 28-oct-2026 se actualizaron contra el estado en vivo los casos 2, 7, 10, 11, 14, 18, 23, 32 y 34 (cierres de dependency-cruiser #1078, maven-pmd-plugin #724 y transformers #29279; eslint #21223 en agenda del TSC; diff_cover #619 pasa a incierto); el censo agregado sigue siendo el del 9-sep.
 
 Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos en la primera línea (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso), más 10 en la segunda: 43 en total. 11 cerrados: 4 con resultado a favor (import-linter #375 completed con la PR #376 mergeada y crédito en docs/authors.md; jscpd #938 implementado y publicado en la release v5.1.0; knip #1949 aceptado y derivado a #1532, que al 9-sep sigue abierto; gemini-cli #28859 completed con la PR #29252 del mantenedor mergeada el 8-sep), 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). Entre los abiertos con intercambio real: SwiftLint #6871 tiene PR de fix abierta por un tercero; dependency-cruiser #1078 con las dos propuestas aceptadas como trabajo futuro; eslint #21223 etiquetado `core` y `feature`, con la implementación en discusión en el equipo; eslint #21226 respondido con repro verificado tras el pedido de caso de uso; stylelint #9438 retitulado por el mantenedor (jeddy3) y aceptado como pedido de función; gitleaks #2239 y bandit #1467 reproducidos de forma independiente por terceros. MSRC: cerrado el 24-ago-2026 como Low severity, sin CVE, fix planificado — detalle completo en el caso 15. El resto, sin respuesta todavía.
 
@@ -20,7 +20,7 @@ Qué pasó: nada aún.
 ## 2 · sverweij/dependency-cruiser #1078
 
 **Link**: https://github.com/sverweij/dependency-cruiser/issues/1078
-**Estado**: Open. **El owner shippeó las dos propuestas en la v18.3.0 (16-sep).**
+**Estado**: **Closed (completed)** el 22-sep por el owner. **v18.3.0 con delta y shrink-only, v18.4.0 con entradas stale en los reporters y exit no-cero.**
 
 Qué planteé: el known-violations file hace bien la granularidad (por instancia, no por regla), y ya imprime el count en cada corrida verde — mejor que la mayoría. Pero el count es nivel, no cambio: `⚠ 20 known violations ignored` es igual si el store creció de 12 a 20 o bajó de 28 a 20. Pedí delta contra el archivo en disco, y/o modo shrink-only para `depcruise-baseline`.
 
@@ -31,6 +31,14 @@ Qué pasó — verificado en vivo el 16-sep-2026:
 — Respondí agradeciendo y pidiendo que confirme un solo punto de diseño: que la clave de comparación excluya la severidad. Un retune warn a error es la misma violación para el ratchet y no debe resurgir el set entero como nuevo; un cambio de from/to bajo la misma regla sí es otra. Pendiente su confirmación de la clave.
 
 Resultado del caso: las dos propuestas planteadas, escritas y publicadas por el owner en una release.
+
+**16-sep-2026**: sverweij confirmó que la severidad queda fuera de la clave de comparación, y sugirió anotarlo en la documentación.
+
+**22-sep-2026**: sverweij publicó la **v18.4.0**: los reporters que emiten violaciones (`err`, html, markdown) muestran la cantidad de entradas stale de la baseline, y los que corresponde pueden salir con código no-cero cuando hay stale. Según el owner la v18.3.0 salió el 13-sep. Con las dos versiones dio el issue por resuelto y lo cerró como completed.
+
+**28-oct-2026**: respondí confirmando que las dos mitades quedan cubiertas (el conteo visible y ahora su cambio) y que vale documentar que la severidad no entra en la clave, porque eso evita que un cambio de severidad se lea como churn.
+
+Sin pendientes.
 
 ---
 
@@ -145,7 +153,7 @@ Qué pasó — historia sustancial:
 ## 7 · eslint/eslint #21223
 
 **Link**: https://github.com/eslint/eslint/issues/21223
-**Estado**: Open, labels `core` y `feature`, en triage. Con historia — clarificación del mantenedor respondida, y un colaborador ofreciéndose a implementarlo.
+**Estado**: Open, labels `core`, `feature`, `evaluating`, `tsc agenda`. **Gap confirmado por el equipo el 26-oct y enviado a decisión del TSC (semver-minor).**
 
 Qué planteé: distinguí este pedido de dos issues previos relacionados y cerrados (#19321 cerrado como duplicado de #17609; #17609 resuelto por detección de fixes circulares en v9.23.0) — argumenté que la detección circular no cubre el caso real: salida silenciosa por `MAX_AUTOFIX_PASSES` agotado con fixes pendientes. Mismo argumento de fondo que en openrewrite: presupuesto agotado no es un resultado, es un control.
 
@@ -157,7 +165,15 @@ Qué pasó — verificado en vivo el 16-ago-2026:
 
 — **18-ago-2026**: el issue quedó etiquetado `core` y `feature`, y entró al proyecto Triage. **solp721** revisó `verifyAndFix` y confirmó el diagnóstico desde el código — la salida por límite de pasadas cae del loop sin registrar nada, mientras el caso circular ya pasa por `WarningService` — y cerró ofreciéndose: *"if you aren't planning to implement this yourself, I'd like to give it a shot once it's accepted."*
 
-— Pendiente, y es mío: decidir si lo implemento o le paso la posta.
+**1-sep-2026**: lyh7c00 abrió la PR #21288 con la forma acordada. Se cerró sin merge el mismo día: mdjermanovic indicó que el issue todavía no estaba aceptado.
+
+**6-sep-2026**: le pasé la implementación a lyh7c00 y ofrecí revisar la PR.
+
+**7-oct-2026**: el bot marcó el issue para auto-cierre. Comenté antes del vencimiento con el estado de la implementación, y que el formatter propuesto por DMartens va encima de esto, no en su lugar.
+
+**26-oct-2026**: SwetaTanwar confirmó que el gap es real y que no lo cubren #17609 ni el warning de circular fixes de v9.23.0. Por ser cambio de comportamiento del core (semver-minor) lo puso en agenda del TSC con un resumen. Labels nuevos: `evaluating` y `tsc agenda`.
+
+Pendiente: decisión del TSC.
 
 ---
 
@@ -193,7 +209,7 @@ Qué pasó: nada aún.
 ## 10 · eslint/eslint #21226 — el caso original de la línea de trabajo
 
 **Link**: https://github.com/eslint/eslint/issues/21226
-**Estado**: Open. **Respuesta del mantenedor el 30-ago: pidió caso de uso concreto. Respondida el 1-sep con repro verificado y pedido acotado.** Labels `core`, `enhancement`, `needs info`.
+**Estado**: Open. Labels `core`, `enhancement`, `needs info`, `Stale`. **fasttime pidió volcar la propuesta concreta en la descripción para una discusión de RFC; descripción reescrita el 28-oct.**
 
 Qué planteé: `eslint-suppressions.json` bucketiza por `(file, rule) → count`, no por identidad de violación. Reproducido: 2 violaciones reales suprimidas (count: 2), arreglé una, introduje otra distinta en el mismo archivo, el count se mantiene en 2 — ni el lint normal ni `--prune-suppressions` (la herramienta de auditoría dedicada) lo detectan. Pedí que `--prune-suppressions` marque, al menos como warning, buckets donde el count coincide pero el set de ocurrencias cambió.
 
@@ -209,7 +225,17 @@ Qué pasó: este es el issue origen — todos los demás casos de "count sin ide
 
 — Deliberadamente no cité ningún texto propio en la respuesta. La objeción de fasttime sobre la autorreferencia era correcta.
 
-— Pendiente: respuesta de ESLint.
+**1-sep-2026**: fasttime objetó que los mensajes de violación no son identidad (muchas reglas repiten el mismo mensaje) y que cambian entre versiones, y preguntó cómo manejan otras herramientas las supresiones obsoletas.
+
+**11-sep-2026**: respondí concediendo las dos objeciones y descartando el digest sobre mensajes. Aporté cinco herramientas (jscpd, SwiftLint, gitleaks, bandit, dependency-cruiser) y la convergencia: hashear el contenido suprimido, nunca su descripción. Propuesta: digest sobre el texto normalizado del rango suprimido, que reporta sin invalidar.
+
+**21-sep-2026**: fasttime resumió la propuesta (hash del texto normalizado del rango reportado), dijo que el cambio requiere un RFC, pidió actualizar la descripción con la propuesta concreta y remitió a #16755.
+
+**21-oct-2026**: el bot marcó el issue como Stale (auto-cierre a los 7 días sin actualización).
+
+**28-oct-2026**: reescribí la descripción con la propuesta concreta (digest sobre el texto normalizado del rango, count sin cambios como gate, reporta sin invalidar, compatible hacia atrás), con prior art, #16755, DOI y ledger. Comenté que está lista para el RFC o la PR.
+
+Pendiente: respuesta del equipo y que salga el label Stale.
 
 ---
 
@@ -231,7 +257,9 @@ Qué pasó — historia real, la más fuerte de los casos:
 
 — **16-sep-2026**: LizunovSergey coincidió con el residuo (el grupo que se da vuelta entero no deja ancla y necesita una clave más fuerte que reason + texto de línea, un cambio distinto de este PR). Le respondí confirmando que la línea que trazó es la correcta y que ese residuo va a su propio issue, no montado en este PR. La PR #6872 sigue abierta esperando aprobación del mantenedor.
 
-— Pendiente: que un mantenedor apruebe los workflows pendientes y decida sobre la precedencia.
+**6-oct-2026**: Akhrameev señaló en la PR #6872 un falso positivo de la heurística de anclas: si un corrimiento mueve solo algunos de los duplicados, el que queda en su línea pasa a ancla y el otro se reporta como nuevo aunque no se agregó nada (en main ese caso queda en silencio). Agregó que un corrimiento uniforme produce la misma entrada que el test de reemplazo con igual conteo, así que con regla, texto de línea y razón como clave los dos casos no se distinguen. Adjuntó repro con los helpers de la PR.
+
+Pendiente: respuesta del autor de la PR y decisión de un mantenedor.
 
 ---
 
@@ -265,11 +293,13 @@ Qué pasó — verificado en vivo el 18-ago-2026: **jeddy3** (mantenedor) retitu
 ## 14 · oxc-project/oxc — comentario en Discussion #22198 (no es issue propio)
 
 **Link**: https://github.com/oxc-project/oxc/discussions/22198
-**Estado**: Comentario publicado, sin replies (1 like).
+**Estado**: 2 comentarios publicados en la discussion #22198, sin respuesta. El hilo sigue vivo.
 
 Qué planteé: revisando el código fuente mergeado (`crates/oxc_linter/src/suppression/mod.rs`, PR #19328), `DiagnosticCounts` es el mismo bucket de count plano que ESLint y stylelint — mismo blindspot. La diferencia: **todavía no está liberado en npm** (1.78.0 no tiene `--suppress-all`), así que sigue siendo cambiable antes del release. Recomendé construir el audit de prune-time desde el diseño inicial, citando eslint#21226 y stylelint#9438 como precedente ya verificado.
 
 Qué pasó: sin respuesta de los mantenedores de oxc todavía. Es distinto de los demás casos porque llegó antes del release — ventana de oportunidad real si lo leen a tiempo.
+
+**28-oct-2026**: el hilo sigue vivo con 21 participantes. El mantenedor camchenry publicó una hoja de decisiones con diseño por conteo. Mis 2 comentarios (citando Closure Trivialization §10) siguen sin respuesta y el punto no fue adoptado. Sin historia aplica a mis comentarios, no al hilo.
 
 ---
 
@@ -321,11 +351,13 @@ Qué pasó: nada aún.
 ## 18 · Bachmann1234/diff_cover #619
 
 **Link**: https://github.com/Bachmann1234/diff_cover/issues/619
-**Estado**: **Closed (completed)**.
+**Estado**: Closed (completed) el 16-ago por el mantenedor. **Sin evidencia de fix: estado real incierto.**
 
 Qué planteé: `total_percent_covered()` agrega todo el diff, bug real diluido por líneas triviales.
 
 Qué pasó: cerrado por **Bachmann1234** sin comentario ni PR/commit vinculado — no queda claro si lo consideró resuelto o simplemente lo cerró. Sin reapertura.
+
+**28-oct-2026**: reverificado. El cierre como completed no tiene comentario, PR ni commit vinculado. No hay evidencia de que el defecto se haya corregido, así que se registra como incierto y no como resultado a favor.
 
 ---
 
@@ -376,13 +408,17 @@ Qué pasó: nada aún.
 ## 23 · gitleaks/gitleaks #2239
 
 **Link**: https://github.com/gitleaks/gitleaks/issues/2239
-**Estado**: Open. **Reproducido de forma independiente por un tercero contra master.**
+**Estado**: Open, label `bug`. Reproducido de forma independiente por un tercero contra master. **Un tercero trabaja en el fix desde el 28-sep.**
 
 Qué planteé: en vivo — el fingerprint de `.gitleaksignore` es `file:rule:line` y no incorpora el contenido del secreto, así que la línea queda suprimida sin importar qué secreto tenga.
 
 Qué pasó: **CAOShurong** lo reprodujo de punta a punta el 25-ago-2026 contra el master vigente (`b58d3f1`), compilando el binario localmente y en modo sin git. Confirmó los tres pasos: detección inicial con fingerprint `config.py:generic-api-key:1`; supresión correcta al agregarlo a `.gitleaksignore`; y —el punto del reporte— reemplazo del secreto por otro completamente distinto en la misma línea, con el resultado `no leaks found` y código de salida 0. Un secreto real y no relacionado queda permanentemente invisible sobre una línea ya ignorada.
 
 Sin respuesta de mantenedores todavía. Sin pregunta pendiente de mi lado.
+
+**28-sep-2026**: breken-ai informó que trabaja los dos casos. La comparación de baseline redactada ya tiene camino red/green con un token V2 previo a la redacción. En archivos de ignore, los tokens V2 distinguen un secreto reemplazado, pero una entrada existente `file:rule:line` no tiene identidad del secreto viejo y sigue suprimiendo cualquier secreto en esa posición. Retiene la PR hasta acordar la semántica de migración y preguntó a los mantenedores si prefieren un modo V2 que rechace o avise sobre entradas legacy solo por posición.
+
+Pendiente: decisión de los mantenedores sobre la migración.
 
 ---
 
@@ -501,11 +537,17 @@ Qué pasó: nada aún.
 ## 32 · apache/maven-pmd-plugin #724
 
 **Link**: https://github.com/apache/maven-pmd-plugin/issues/724
-**Estado**: Open. Recién posteado, sin respuesta todavía. Solo código (declarado explícitamente — bloqueo de red a Maven Central).
+**Estado**: **Closed (not planned)** el 11-oct por elharo: los dos gaps funcionan según lo diseñado y documentado.
 
 Qué planteé: `excludeFromFailureFile` excluye por par-de-archivos completo, `maxAllowedViolations` es count puro.
 
 Qué pasó: nada aún.
+
+**11-oct-2026**: elharo cerró como not planned. Considera que el gap 1 (`maxAllowedViolations`) y el gap 2 (`excludeFromFailureFile` por par de archivos) funcionan según lo previsto y documentado, y que el pedido es un cambio de comportamiento, no un bug.
+
+**28-oct-2026**: respondí aceptando el cierre y dejé registrado que ambos gates identifican la duplicación tolerada por conteo o por par de archivos, nunca por el bloque, y que un hash del bloque duplicado sería la clave natural si alguna vez se quiere exclusión por identidad.
+
+Sin pendientes.
 
 ---
 
@@ -531,7 +573,7 @@ Criterio de selección, declarado: entro donde el proyecto ya va en esa direcci�
 ## 34 · huggingface/transformers #29279
 
 **Link**: https://github.com/huggingface/transformers/issues/29279
-**Estado**: Open. **El mantenedor abrió el fix (PR #47386, 16-sep); la discusión converge en la regla del caso.**
+**Estado**: **Closed (completed)** el 20-oct por ArthurZucker. **La PR #47386 del mantenedor se mergeó el 13-oct (d0deac8): el punto entró al código.**
 
 Qué planteé: `apply_chat_template` renderiza el contenido de los mensajes tal cual, así que un `<|im_start|>system` dentro del contenido de usuario se convierte en un límite de rol real. Repro autocontenido —sin descargar modelo, sin red, sin torch— verificado en transformers 5.16.1: dos mensajes entran, cuatro límites de rol salen, y los forjados resuelven al mismo control id que los que emitió la plantilla, porque los matchea el matcher de added tokens al tokenizar. Verifiqué también que no existe `escape_content` ni sanitización alguna en esa ruta; lo único que hay es `add_special_tokens=False`, que evita un BOS duplicado y no toca los marcadores que llegan dentro del contenido.
 
@@ -540,6 +582,12 @@ De las tres opciones del post original descarté la documentación —convierte 
 Qué pasó — verificado en vivo el 16-sep-2026:
 
 — **Rocketknight1** (Member, a cargo de los chat templates) respondió apuntando al fix abierto, **PR #47386** ("Add chat input sanitization"). La discusión evolucionó del borrado simple de tokens especiales hacia el eje de este caso: bbrowning, samuelstevens y ArthurZucker convergen en tokenizar el contenido no confiable aparte, para que no pueda producir los ids estructurales del modelo, y en desacoplar la estructura de la plantilla del contenido. ArthurZucker pidió cambios; hay una PR competidora, #48052, token-level. La regla que planteé (solo la plantilla emite los marcadores de rol) está representada en el hilo por varias manos; no volví a comentar para no meter ruido.
+
+**13-oct-2026**: se mergeó la PR #47386 (commit d0deac8). Agrega `sanitize_control_tokens`, cubre todos los control tokens (no solo los special) y un guard que rechaza si el contenido produce el id de un control token. La PR cierra #47217, no #29279.
+
+**20-oct-2026**: ArthurZucker cerró #29279 como completed. El último intercambio, el 21-oct, es entre pavelai y Rocketknight1, sin pedido hacia mí.
+
+Sin pendientes.
 
 ---
 
@@ -705,7 +753,7 @@ Metodología del rastrillaje: búsquedas en paralelo por categoría, código fue
 
 Caso 1 — ArchUnit #1700 — Open — sin historia
 
-Caso 2 — dependency-cruiser #1078 — Open — **el owner shippeó las dos propuestas en la v18.3.0 (16-sep); pendiente confirmar la clave de comparación**
+Caso 2 — dependency-cruiser #1078 — **Closed (completed)** — **v18.3.0 (delta + shrink-only) y v18.4.0 (stale en reporters, exit no-cero); cerrado por el owner el 22-sep; clave confirmada sin severidad**
 
 Caso 3 — import-linter #375 — **Closed (completed)** — PR #376 mergeada el 24-ago; la feature entra al proyecto
 
@@ -715,21 +763,21 @@ Caso 5 — Hypothesis #4854 — **Closed** — cerrado por política AI, respond
 
 Caso 6 — spec-kit #4106 — Open — **preset mergeado al catálogo de la comunidad (PR #4201) el 16-sep, #4192 cerrado; dejé las dos advertencias (coverage, unidad) en la PR de core #4160, que sigue abierta con cambios pedidos**
 
-Caso 7 — eslint #21223 — Open — labels `core` y `feature`; **un colaborador se ofrece a implementarlo, decisión pendiente mía**
+Caso 7 — eslint #21223 — Open — **gap confirmado el 26-oct y en agenda del TSC (semver-minor); PR #21288 de lyh7c00 cerrada sin merge el 1-sep porque el issue no estaba aceptado**
 
 Caso 8 — phpstan #15078 — **Closed (completed)** — respuesta hostil, respondí, mantenedor volvió con respuesta técnica sustantiva y cerró
 
 Caso 9 — rubocop #15570 — Open — sin historia
 
-Caso 10 — eslint #21226 — Open — **el mantenedor pidió caso de uso concreto el 30-ago; respondido el 1-sep con repro en v10.9.1 y pedido acotado**
+Caso 10 — eslint #21226 — Open — **fasttime pidió RFC y propuesta concreta en la descripción (21-sep); descripción reescrita el 28-oct; label Stale activo**
 
-Caso 11 — SwiftLint #6871 — Open — **confirmado + PR de fix (#6872) por un colaborador; le respondí en la PR con el residuo del grupo completo; reconfirmado 16-sep, PR esperando al mantenedor**
+Caso 11 — SwiftLint #6871 — Open — **confirmado + PR de fix (#6872) por un colaborador; le respondí en la PR con el residuo del grupo completo; reconfirmado 16-sep; 6-oct Akhrameev marcó un falso positivo en la heurística de anclas, PR abierta sin merge**
 
 Caso 12 — golangci-lint #6714 — **Closed (declined)** — declined, respondí, sin reapertura
 
 Caso 13 — stylelint #9438 — Open — **retitulado y aceptado por el mantenedor como pedido de función**, esperando a ESLint
 
-Caso 14 — oxc discussion #22198 — comentario publicado — sin historia (1 like, sin reply)
+Caso 14 — oxc discussion #22198 — 2 comentarios publicados — **hilo vivo (21 participantes), diseño del mantenedor por conteo; mis comentarios sin respuesta, punto no adoptado**
 
 Caso 15 — microsoft/agent-governance-toolkit (MSRC 136137) — **cerrado por MSRC como Low, sin CVE, fix planificado** — comportamiento reconocido; detalle completo publicado tras cumplirse la reserva
 
@@ -737,7 +785,7 @@ Caso 16 — bandit #1467 — Open — **reproducido por un tercero, que además 
 
 Caso 17 — checkov #7647 — Open — sin historia
 
-Caso 18 — diff_cover #619 — **Closed (completed)** — cerrado sin comentario ni PR/commit vinculado
+Caso 18 — diff_cover #619 — **Closed (completed)** — cerrado sin comentario ni PR/commit vinculado; **sin evidencia de fix, estado incierto (reverificado 28-oct)**
 
 Caso 19 — pa11y-ci #352 — Open — sin historia
 
@@ -747,7 +795,7 @@ Caso 21 — eslint-seatbelt #30 — Open — sin historia
 
 Caso 22 — codecov/umbrella #1989 — Open — sin historia
 
-Caso 23 — gitleaks #2239 — Open — **reproducido contra master por un tercero**, esperando a los mantenedores
+Caso 23 — gitleaks #2239 — Open — **reproducido contra master por un tercero; desde el 28-sep un tercero (breken-ai) trabaja el fix y espera definición de migración de los mantenedores**
 
 — mypy-baseline — **bloqueado, sin issue** — vulnerable confirmado en vivo, repo no acepta issues públicas
 
@@ -767,11 +815,11 @@ Caso 30 — pip-audit #1113 — **Closed (not planned)** — cerrado sin comenta
 
 Caso 31 — safety #907 — Open — sin historia (1 comentario, solo bot de bienvenida)
 
-Caso 32 — maven-pmd-plugin #724 — Open — sin historia (code-only)
+Caso 32 — maven-pmd-plugin #724 — **Closed (not planned)** — elharo (11-oct): funciona según lo documentado, no es bug; respondí aceptando el cierre el 28-oct
 
 Caso 33 — dependency-check #8751 — **Closed (not planned)** — cerrado sin comentario (code-only)
 
-Caso 34 — transformers #29279 — Open — **el mantenedor abrió el fix (PR #47386) el 16-sep; la discusión converge en la regla del caso**
+Caso 34 — transformers #29279 — **Closed (completed)** — **PR #47386 mergeada el 13-oct (d0deac8), el punto entró al código; issue cerrado el 20-oct**
 
 Caso 35 — gemini-cli #28859 — **Closed (completed)** — la PR #29252 del mantenedor, mergeada el 8-sep; entra el fix estrecho, no la comparación permanente
 
