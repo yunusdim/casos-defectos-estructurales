@@ -42,6 +42,60 @@ proyecto, que se corrigio, que se rechazo y por que.
 
 El indice del final tiene los 44, caso por caso.
 
+## Estado al 28 de octubre de 2026
+
+Recuento completo, verificado en vivo contra cada hilo el 28-oct. Reemplaza
+como recuento vigente al censo del 9 de septiembre, que queda abajo como
+historia.
+
+44 casos indexados, 34 en la primera linea y 10 en la segunda. 42 son
+issues: 14 cerrados y 28 abiertos. Los otros dos son un comentario en una
+discussion (oxc #22198) y un reporte de disclosure coordinada (MSRC), que no
+tienen estado de issue. 30 casos con respuesta registrada del proyecto
+(comentario, accion o cierre); 14 sin respuesta.
+
+El proyecto escribio y publico el cambio:
+
+- kucherenko/jscpd #938. Baseline de clones publicado en la v5.1.0.
+- google-gemini/gemini-cli #28859. PR #29252 del mantenedor, mergeada.
+- sverweij/dependency-cruiser #1078. v18.3.0 con delta y modo shrink-only,
+  v18.4.0 con entradas stale en los reporters y exit no-cero. Cerrado por el
+  owner el 22-sep.
+- huggingface/transformers #29279. PR #47386 del mantenedor, mergeada el
+  13-oct: sanitize_control_tokens, cobertura de todos los control tokens y
+  un guard que rechaza si el contenido produce el id de un control token.
+  Issue cerrado el 20-oct.
+
+El proyecto mergeo mi parche:
+
+- seddonym/import-linter #375. PR #376, mergeada por el mantenedor el
+  24-ago.
+
+Un tercero escribio o esta escribiendo el fix:
+
+- PyCQA/bandit #1467. Un tercero reprodujo el caso y escribio el fix. El
+  repo no acepta PRs externas.
+- realm/SwiftLint #6871. PR #6872 de LizunovSergey, abierta. El 6-oct
+  Akhrameev marco un falso positivo en la heuristica de anclas.
+- gitleaks/gitleaks #2239. breken-ai trabaja el fix desde el 28-sep y espera
+  que los mantenedores definan la migracion de las entradas por posicion.
+
+Aceptado o en decision, todavia sin construir:
+
+- eslint/eslint #21223. Gap confirmado por el equipo el 26-oct, en agenda
+  del TSC como cambio semver-minor.
+- eslint/eslint #21226. El equipo pidio un RFC; descripcion reescrita con la
+  propuesta concreta el 28-oct.
+- webpro-nl/knip #1949. Aceptado y derivado a #1532, que sigue abierto.
+- stylelint/stylelint #9438. Retitulado y aceptado como pedido de funcion.
+- github/spec-kit #4106. Preset en el catalogo de la comunidad (PR #4201);
+  el PR de un tercero, #4160, sigue abierto.
+
+Los cierres sin cambio tambien estan en el indice, con el motivo. El ultimo
+es apache/maven-pmd-plugin #724, cerrado como not planned el 11-oct.
+Bachmann1234/diff_cover #619 figura cerrado como completed, pero sin
+comentario, PR ni commit: queda como incierto.
+
 ## Estado al 9 de septiembre de 2026
 
 43 casos indexados, 33 en la primera linea y 10 en la segunda.
@@ -77,8 +131,8 @@ Los cierres sin cambio tambien estan, con el motivo.
 ## Movimientos al 16 de septiembre de 2026
 
 Desde el censo del 9 de septiembre, verificado en vivo contra cada hilo. El
-censo agregado de arriba (43 indexados, 33 y 10) sigue siendo el ultimo
-recuento completo; lo de aca son los cambios de estado sobre esos casos, mas
+censo agregado de arriba (43 indexados, 33 y 10) fue el ultimo recuento
+completo hasta el del 28 de octubre; lo de aca son los cambios de estado sobre esos casos, mas
 la circulacion de segunda linea al final.
 
 El proyecto escribio y publico el cambio:
@@ -124,7 +178,7 @@ Segunda linea, en circulacion:
 ## Movimientos al 14 de octubre de 2026
 
 Primera veta nueva de primera linea desde el censo del 9 de septiembre. El
-indice pasa a 44; el censo agregado sigue siendo el del 9-sep.
+indice pasa a 44; el censo agregado seguia siendo el del 9-sep.
 
 - astral-sh/ruff #1149. El hilo de baseline para adopcion incremental
 (abierto desde 2022, 40+ comentarios, labels core y suppression) esta
@@ -161,3 +215,25 @@ https://doi.org/10.5281/zenodo.22722523
 
 Diego Gabriel Impieri
 https://orcid.org/0009-0003-9082-650X
+
+## Movimientos al 28 de octubre de 2026
+
+Verificado en vivo contra cada hilo. Con esto se reconto el censo completo
+(seccion Estado al 28 de octubre, arriba).
+
+- sverweij/dependency-cruiser #1078. v18.4.0 y cierre como completed el
+  22-sep. Respondi el 28-oct.
+- apache/maven-pmd-plugin #724. Cerrado como not planned el 11-oct: funciona
+  segun lo documentado. Respondi aceptando el cierre el 28-oct.
+- huggingface/transformers #29279. PR #47386 mergeada el 13-oct, issue
+  cerrado el 20-oct.
+- eslint/eslint #21223. PR #21288 cerrada sin merge el 1-sep porque el issue
+  no estaba aceptado. El 26-oct el equipo confirmo el gap y lo paso al TSC.
+- eslint/eslint #21226. Pedido de RFC el 21-sep, label Stale el 21-oct,
+  descripcion reescrita con la propuesta concreta el 28-oct.
+- realm/SwiftLint #6871. Falso positivo marcado en la PR #6872 el 6-oct.
+- gitleaks/gitleaks #2239. Un tercero trabaja el fix desde el 28-sep.
+- oxc-project/oxc #22198. Hilo vivo, diseno del mantenedor por conteo; mis
+  comentarios siguen sin respuesta.
+- Bachmann1234/diff_cover #619. Reverificado: cierre sin evidencia de fix,
+  pasa a incierto.
