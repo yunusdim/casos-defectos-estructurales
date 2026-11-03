@@ -51,8 +51,9 @@ historia.
 44 casos indexados, 34 en la primera linea y 10 en la segunda. 42 son
 issues: 14 cerrados y 28 abiertos. Los otros dos son un comentario en una
 discussion (oxc #22198) y un reporte de disclosure coordinada (MSRC), que no
-tienen estado de issue. 30 casos con respuesta registrada del proyecto
-(comentario, accion o cierre); 14 sin respuesta.
+tienen estado de issue. 31 casos con respuesta registrada del proyecto
+(comentario, accion o cierre); 13 sin respuesta. Actualizado el 3 de noviembre
+(movimientos abajo).
 
 El proyecto escribio y publico el cambio:
 
@@ -237,3 +238,15 @@ Verificado en vivo contra cada hilo. Con esto se reconto el censo completo
   comentarios siguen sin respuesta.
 - Bachmann1234/diff_cover #619. Reverificado: cierre sin evidencia de fix,
   pasa a incierto.
+
+## Movimientos al 3 de noviembre de 2026
+
+- realm/SwiftLint #6871. LizunovSergey cerro su PR #6872 el 2-nov: con regla,
+  razon y texto de linea como clave, un reemplazo y un corrimiento uniforme son
+  la misma entrada del filtro. Hace falta identidad en la entrada de baseline
+  (por ejemplo un hash de lineas vecinas), decision de formato de los
+  mantenedores. Respondi el 3-nov.
+- quandarypeak/simian #23. El colaborador lo reprodujo y arreglo el flag
+  -failOnDuplication=N% del CLI (PR #28). Rechazo persistir fingerprints entre
+  corridas por diseno y senalo que el XML ya emite un fingerprint por set.
+  Respondi el 3-nov. Pasa de sin respuesta a con respuesta.
