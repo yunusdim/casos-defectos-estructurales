@@ -1,6 +1,6 @@
 # Casos — defectos estructurales reportados
 
-Corte: 2026-09-09. Abre la segunda línea de casos, sobre gobierno determinista de contexto, a partir de RICK Runtime v9. La auditoría en vivo de los 33 casos de la primera línea es del 18-ago. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión. Movimientos verificados al 16-sep-2026 registrados en cada caso afectado y en la sección de circulación de Engine Provenance al final. El 14-oct-2026 se agregó el caso 44 (primera línea, ruff #1149): el índice pasa a 44, el censo agregado sigue siendo el del 9-sep (33 en primera línea, 10 en segunda, 43 indexados a esa fecha). El 17-oct-2026 se actualizó la circulación de goose #11041: el punto que dejé quedó en el código (PR #12914) y candado con test. El 28-oct-2026 se actualizaron contra el estado en vivo los casos 2, 7, 10, 11, 14, 18, 23, 32 y 34 (cierres de dependency-cruiser #1078, maven-pmd-plugin #724 y transformers #29279; eslint #21223 en agenda del TSC; diff_cover #619 pasa a incierto); con eso se recontó el censo en vivo: 44 indexados (34 en primera línea, 10 en segunda), 42 issues con 14 cerrados y 28 abiertos, más 1 comentario en discussion y 1 reporte MSRC, y 30 casos con respuesta registrada del proyecto (comentario, acción o cierre). El Resumen de abajo queda como censo del 9-sep.
+Corte: 2026-09-09. Abre la segunda línea de casos, sobre gobierno determinista de contexto, a partir de RICK Runtime v9. La auditoría en vivo de los 33 casos de la primera línea es del 18-ago. La actualización previa fue del 17-ago (incorpora el movimiento del 16-ago en 6 casos — 4 cierres nuevos y 2 respuestas sustantivas de mantenedor — sobre la base del segundo rastrillaje de 6 categorías nuevas y el filing de 11 issues más: 9 en vivo + 2 code-only). Ledger de todos los casos donde participé: qué se planteó, qué aporté, qué pasó, si hay historia o no. Verificado contra el estado real de cada issue/discussion/reporte, no contra memoria de sesión. Movimientos verificados al 16-sep-2026 registrados en cada caso afectado y en la sección de circulación de Engine Provenance al final. El 14-oct-2026 se agregó el caso 44 (primera línea, ruff #1149): el índice pasa a 44, el censo agregado sigue siendo el del 9-sep (33 en primera línea, 10 en segunda, 43 indexados a esa fecha). El 17-oct-2026 se actualizó la circulación de goose #11041: el punto que dejé quedó en el código (PR #12914) y candado con test. El 28-oct-2026 se actualizaron contra el estado en vivo los casos 2, 7, 10, 11, 14, 18, 23, 32 y 34 (cierres de dependency-cruiser #1078, maven-pmd-plugin #724 y transformers #29279; eslint #21223 en agenda del TSC; diff_cover #619 pasa a incierto); con eso se recontó el censo en vivo: 44 indexados (34 en primera línea, 10 en segunda), 42 issues con 14 cerrados y 28 abiertos, más 1 comentario en discussion y 1 reporte MSRC, y 30 casos con respuesta registrada del proyecto (comentario, acción o cierre). El 3-nov-2026 se actualizaron los casos 11 (SwiftLint #6871: PR #6872 cerrada por su autor) y 28 (simian #23: reproducido, fix del CLI en PR #28); el censo pasa a 31 casos con respuesta y 13 sin respuesta. El Resumen de abajo queda como censo del 9-sep.
 
 Resumen: 31 issues de GitHub + 1 comentario en discussion + 1 reporte MSRC = 33 casos en la primera línea (+ 1 intento bloqueado, mypy-baseline, no cuenta como caso), más 10 en la segunda: 43 en total. 11 cerrados: 4 con resultado a favor (import-linter #375 completed con la PR #376 mergeada y crédito en docs/authors.md; jscpd #938 implementado y publicado en la release v5.1.0; knip #1949 aceptado y derivado a #1532, que al 9-sep sigue abierto; gemini-cli #28859 completed con la PR #29252 del mantenedor mergeada el 8-sep), 3 con comentario del mantenedor (phpstan #15078 completed tras respuesta sustantiva, golangci-lint #6714 declined, deptry #1654 not-planned con "AI slop") y 4 sin ningún comentario (dependency-check #8751, pip-audit #1113 y diff_cover #619, todos not-planned/completed mudos, más Hypothesis #4854 cerrado por política de AI). Entre los abiertos con intercambio real: SwiftLint #6871 tiene PR de fix abierta por un tercero; dependency-cruiser #1078 con las dos propuestas aceptadas como trabajo futuro; eslint #21223 etiquetado `core` y `feature`, con la implementación en discusión en el equipo; eslint #21226 respondido con repro verificado tras el pedido de caso de uso; stylelint #9438 retitulado por el mantenedor (jeddy3) y aceptado como pedido de función; gitleaks #2239 y bandit #1467 reproducidos de forma independiente por terceros. MSRC: cerrado el 24-ago-2026 como Low severity, sin CVE, fix planificado — detalle completo en el caso 15. El resto, sin respuesta todavía.
 
@@ -259,7 +259,11 @@ Qué pasó — historia real, la más fuerte de los casos:
 
 **6-oct-2026**: Akhrameev señaló en la PR #6872 un falso positivo de la heurística de anclas: si un corrimiento mueve solo algunos de los duplicados, el que queda en su línea pasa a ancla y el otro se reporta como nuevo aunque no se agregó nada (en main ese caso queda en silencio). Agregó que un corrimiento uniforme produce la misma entrada que el test de reemplazo con igual conteo, así que con regla, texto de línea y razón como clave los dos casos no se distinguen. Adjuntó repro con los helpers de la PR.
 
-Pendiente: respuesta del autor de la PR y decisión de un mantenedor.
+**2-nov-2026**: LizunovSergey cerró su PR #6872. Explicó que el caso del issue ({10, 20} pasa a {20, 30}) es la misma entrada del filtro que un corrimiento uniforme de 10 líneas: con regla, razón y texto de línea como clave no se distinguen, así que cualquier fix que reporte este caso también reporta un corrimiento. Es el límite que documenta #5475. Cerrarlo bien requiere más contexto en la entrada de baseline (por ejemplo un hash de líneas vecinas) y un fallback para baselines existentes, decisión de formato que deja a los mantenedores.
+
+**3-nov-2026**: respondí que esa es la formulación exacta del límite: la clave no puede separar reemplazo de corrimiento, y la única salida es poner identidad en la entrada misma; el hash de líneas vecinas es eso. Dejo la decisión de formato a los mantenedores.
+
+Pendiente: decisión de los mantenedores sobre el formato de baseline.
 
 ---
 
@@ -493,11 +497,17 @@ Pendiente: respuesta del owner a esos dos puntos, e implementación.
 ## 28 · quandarypeak/simian #23
 
 **Link**: https://github.com/quandarypeak/simian/issues/23
-**Estado**: Open. Recién posteado, sin respuesta todavía.
+**Estado**: Open. **Reproducido por el colaborador; fix del flag de CLI en la PR #28; persistencia de fingerprints entre corridas rechazada por diseño.**
 
 Qué planteé: `Checker.check()` gatea por count/% agregado sin ubicación.
 
 Qué pasó: nada aún.
+
+**2-nov-2026**: Raystudioqp (colaborador) se autoasignó el issue, lo reprodujo y arregló `-failOnDuplication=N%` en el parser del CLI (commit 9863e54, PR #28 vinculada para cerrar el issue). Rechazó persistir fingerprints entre corridas: considera que el historial es un asunto aparte, para un script o un paso de CI. Mostró que los formatters XML/YAML ya emiten un fingerprint por set con archivo y rango de líneas, y propuso comparar esos fingerprints entre corridas.
+
+**3-nov-2026**: respondí aceptando el diseño y dejé registrado que la identidad ya existe del lado de Simian (fingerprint por set) pero el gate de failOnDuplication sigue decidiendo por agregado.
+
+Pendiente: merge de la PR #28.
 
 ---
 
@@ -771,7 +781,7 @@ Caso 9 — rubocop #15570 — Open — sin historia
 
 Caso 10 — eslint #21226 — Open — **fasttime pidió RFC y propuesta concreta en la descripción (21-sep); descripción reescrita el 28-oct; label Stale activo**
 
-Caso 11 — SwiftLint #6871 — Open — **confirmado + PR de fix (#6872) por un colaborador; le respondí en la PR con el residuo del grupo completo; reconfirmado 16-sep; 6-oct Akhrameev marcó un falso positivo en la heurística de anclas, PR abierta sin merge**
+Caso 11 — SwiftLint #6871 — Open — **confirmado + PR de fix (#6872) por un colaborador; le respondí en la PR con el residuo del grupo completo; reconfirmado 16-sep; 6-oct Akhrameev marcó un falso positivo en la heurística de anclas; PR cerrada por su autor el 2-nov: el límite requiere identidad en la entrada (hash de líneas vecinas), decisión de formato de los mantenedores**
 
 Caso 12 — golangci-lint #6714 — **Closed (declined)** — declined, respondí, sin reapertura
 
@@ -807,7 +817,7 @@ Caso 26 — deptry #1654 — **Closed (not planned)** — "AI slop", respondí c
 
 Caso 27 — jscpd #938 — **Closed (implementado)** — el mantenedor publicó **v5.1.0** con el baseline de clones; los dos puntos que levanté quedaron dentro
 
-Caso 28 — simian #23 — Open — sin historia
+Caso 28 — simian #23 — Open — **reproducido por el colaborador (2-nov); fix del flag de CLI en la PR #28; persistencia entre corridas rechazada por diseño; respondí el 3-nov**
 
 Caso 29 — audit-ci #356 — Open — sin historia
 
